@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute bottom-0 left-0 right-0 bg-gray-300 text-center text-gray-600 text-xs">
+  <div class="absolute bottom-0 left-0 right-0 text-center text-gray-600 text-xs">
     Teken Mobility {{thisYear}}
   </div>
 </template>

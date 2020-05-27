@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-input {
-  @apply block border;
+input [type='text'] {
+  @apply block w-full border ;
 }
 </style>

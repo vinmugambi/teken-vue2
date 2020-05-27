@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="min-h-screen bg-gray-100">
     <navigation />
-    <main class="container mx-auto py-8">
+    <main class="container mx-auto">
       <router-view />
     </main>
     <my-footer />

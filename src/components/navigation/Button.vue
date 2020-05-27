@@ -49,7 +49,7 @@ export default {
   animation-timing-function: ease-out;
 }
 .btn-primary {
-  @apply bg-blue-600 text-white;
+  @apply bg-blue-700 text-white;
 }
 .btn-primary:hover:enabled {
   @apply bg-blue-500;
