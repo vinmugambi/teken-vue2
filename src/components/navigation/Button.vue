@@ -55,7 +55,7 @@ export default {
   @apply bg-blue-500;
 }
 .btn-primary:focus:enabled {
-  @apply bg-blue-700;
+  @apply bg-blue-800;
 }
 .btn-default {
   @apply border text-gray-700 bg-gray-200;

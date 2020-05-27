@@ -5,13 +5,13 @@
         <slot name="header"></slot>
       </div>
       <div class="p-4">
-        <div class="py-4 text-2xl">
+        <div class="pb-4 text-2xl">
           <slot name="title"></slot>
         </div>
         <div>
           <slot name="content"></slot>
         </div>
-        <div>
+        <div class="pt-4">
           <slot name="navigation"></slot>
         </div>
       </div>

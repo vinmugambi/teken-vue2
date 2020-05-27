@@ -1,6 +1,7 @@
 <template>
   <input
     type="text"
+    class="block w-full py-1 px-2 rounded border focus:bg-gray-100 focus:outline-none"
     :value="value"
     @change="$emit('change', $event.target.value)"
   />
@@ -17,8 +18,3 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-input [type='text'] {
-  @apply block w-full border ;
-}
-</style>

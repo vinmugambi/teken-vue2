@@ -1,10 +1,16 @@
 <template>
   <step-layout>
     <template v-slot:header> </template>
-    <template v-slot:title> </template>
+    <template v-slot:title> <h2>Choose your visa type</h2> </template>
     <template v-slot:content>
-      <form-factory :value="formData" :schema="schema" @change="update($event)" />
-      <my-button variant="primary" @click="$emit('next')" >Next</my-button>
+      <form-factory
+        :value="formData"
+        :schema="schema"
+        @change="update($event)"
+      />
+    </template>
+    <template v-slot:navigation>
+      <my-button variant="primary" @click="$emit('next')">Next</my-button>
     </template>
   </step-layout>
 </template>
