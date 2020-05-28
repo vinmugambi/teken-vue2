@@ -18,12 +18,15 @@
 <script>
 import { reactive, set } from "@vue/composition-api";
 
-import StepLayout from "./StepLayout";
+import StepLayout from "./StepLayout.vue";
 
 import FormFactory from "../form/FormFactory.vue";
-import TextInput from "../form/TextInput.vue";
+import SelectBox from "../form/SelectBox.vue";
+import RadioInput from "../form/RadioInput.vue";
 
 import MyButton from "../navigation/Button.vue";
+
+import { allNationalities } from "../../utils/countries.js";
 
 export default {
   components: { StepLayout, FormFactory, MyButton },
@@ -45,16 +48,40 @@ export default {
   }
 };
 
+const nations = allNationalities.map(nation => {
+  return { value: nation.value, text: nation.country };
+});
+const visaTypes = [
+  { text: "Tourist", value: "tourist" },
+  { text: "Business", value: "business" },
+  { text: "Medical", value: "medical" },
+  { text: "Other", value: "other" }
+];
+const passportTypes = [
+  { text: "Ordinary", value: "ordinary" },
+  { text: "Diplomatic", value: "diplomatic" },
+  { text: "Service", value: "service" },
+  { text: "Refugee", value: "refugee" },
+  { text: "Other type not listed", value: "other" }
+];
+
 const SCHEMA = {
   passport: {
     label: "Passport type",
-    component: TextInput
+    component: RadioInput,
+    choices: passportTypes
   },
   nationality: {
     label: "Nationality",
-    component: TextInput
+    component: SelectBox,
+    choices: nations
   },
-  visaType: { label: "Visa type", component: TextInput },
-  visaPurpose: { label: "Purpose of travel", component: TextInput }
+  visaType: { label: "Visa type", component: RadioInput, choices: visaTypes },
+  visaPurpose: {
+    label: "Purpose of travel",
+    component: RadioInput,
+    choices: [],
+    visible: false
+  }
 };
 </script>

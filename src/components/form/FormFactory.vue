@@ -8,10 +8,11 @@
       />
       <component
         :is="field.component"
-        v-bind="bindTo(field)"
+        v-bind="bindAttrs(field)"
         :id="safeId(field)"
         @change="update(field.model, $event)"
         :value="fieldValue(field)"
+        :options="!!field.choices ? field.choices : false"
       />
     </div>
   </div>
@@ -43,15 +44,11 @@ export default defineComponent({
     }
 
     function fieldValue(field){
-      if (field.schema && !props.value[field.model]) {
-        return {};
-      } else return props.value[field.model];
+       return props.value[field.model];
     }
 
-    function bindTo(field) {
-      return field.schema
-        ? { schema: field.schema }
-        : { ...props.shared, ...field };
+    function bindAttrs(field) {
+      return {...field.attrs}
     }
     // const val = field => {
     //   if (field.schema && !props.value[field.model]) {
@@ -69,7 +66,7 @@ export default defineComponent({
     return {
       fields,
       fieldValue,
-      bindTo,
+      bindAttrs,
       update,
       safeId,
     };

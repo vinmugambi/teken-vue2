@@ -12,7 +12,8 @@
 export default {
   props: {
     value: {
-      required: true
+      required: true,
+      type: String
     }
   }
 };
