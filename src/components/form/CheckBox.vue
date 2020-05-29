@@ -1,22 +1,39 @@
 <template>
   <div>
-    <div v-for="option in options" :key="option.text" class="pl-2">
+    <div v-for="option in options" :key="option.text" class="pl-1">
       <input
         type="checkbox"
         :id="`${option.value}-checkbox`"
-        @change="$emit('change', $event.target.value)"
-        :value="value"
+        v-model="checked"
+        :value="option.value"
       />
-      <label class="option" :for="`${option.value}-checkbox`">{{option.text}}</label>
+      <label class="pl-1" :for="`${option.value}-checkbox`">{{
+        option.text
+      }}</label>
     </div>
   </div>
 </template>
 
 <script>
+import { computed } from "@vue/composition-api";
 export default {
   props: {
-    value: { type: String, required: true },
-    options: { type: Array, required: true, default: () => [] }
+    value: { type: Array, required: false, default: () => [] },
+    options: { type: Array, required: true }
+  },
+  setup(props, { emit }) {
+    const checked = computed({
+      set: value => {
+        emit("change", value);
+      },
+      get: () => {
+        return props.value || [];
+      }
+    });
+
+    return {
+      checked
+    };
   }
 };
 </script>

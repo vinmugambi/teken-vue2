@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="option in options" :key="option.text" class="radio-option pl-2">
+    <div v-for="option in options" :key="option.text" class="pl-1">
       <input
         type="radio"
         :id="`${option.value}-radio`"
@@ -8,8 +8,9 @@
         :value="option.value"
         :checked="option.value === value"
       />
-      <label class="option" :for="`${option.value}-input`">{{
-option.text}}</label>
+      <label class="pl-1" :for="`${option.value}-input`">{{
+        option.text
+      }}</label>
     </div>
   </div>
 </template>
@@ -17,8 +18,8 @@ option.text}}</label>
 <script>
 export default {
   props: {
-    value: { type: String, required: true },
-    options: { type: Array, required: true, default: () => [] }
+    value: { type: String, required: false, default: () => "" },
+    options: { type: Array, required: true }
   }
 };
 </script>

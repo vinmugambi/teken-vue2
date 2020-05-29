@@ -23,6 +23,7 @@ import StepLayout from "./StepLayout.vue";
 import FormFactory from "../form/FormFactory.vue";
 import SelectBox from "../form/SelectBox.vue";
 import RadioInput from "../form/RadioInput.vue";
+import CheckBox from "../form/CheckBox.vue"
 
 import MyButton from "../navigation/Button.vue";
 
@@ -76,7 +77,7 @@ const SCHEMA = {
     component: SelectBox,
     choices: nations
   },
-  visaType: { label: "Visa type", component: RadioInput, choices: visaTypes },
+  visaType: { label: "Visa type", component: CheckBox, choices: visaTypes },
   visaPurpose: {
     label: "Purpose of travel",
     component: RadioInput,

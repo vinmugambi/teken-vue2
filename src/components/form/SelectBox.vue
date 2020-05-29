@@ -2,11 +2,9 @@
   <div class="block relative">
     <select :value="value" @change="$emit('change', $event.target.value)">
       <!-- <option value>{{input.placeholder}}</option> -->
-      <option
-        v-for="option in options"
-        :key="`${option.value}-option`"
-        >{{ option.text}}</option
-      >
+      <option v-for="option in options" :key="`${option.value}-option`">{{
+        option.text
+      }}</option>
     </select>
     <div
       class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
@@ -29,9 +27,9 @@ export default {
   props: {
     value: {
       type: String,
-      required: true
+      required: false
     },
-    options: { type: Array, required: true, default: () => [] }
+    options: { type: Array, required: true }
   }
 };
 </script>

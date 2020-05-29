@@ -1,5 +1,5 @@
 <template>
-  <div class="relative py-16">
+  <div class="py-4 md:py-16">
     <first v-if="activeStep === 0" v-on:next="nextStep">{{ activeStep }}</first>
     <second v-if="activeStep === 1" v-on:next="nextStep">{{ activeStep }}</second>
     <third v-if="activeStep === 2"  v-on:next="nextStep">{{ activeStep }}</third>
