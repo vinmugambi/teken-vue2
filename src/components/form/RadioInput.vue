@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div v-for="option in options" :key="option.text" class="pl-1">
+    <div v-for="(option,index) in options" :key="option.text" class="pl-1">
       <input
         type="radio"
-        :id="`${option.value}-radio`"
+        :id="`${option.value}-${index}`"
         @change="$emit('change', $event.target.value)"
         :value="option.value"
         :checked="option.value === value"
       />
-      <label class="pl-1" :for="`${option.value}-input`">{{
+      <label class="pl-1" :for="`${option.value}-${index}`">{{
         option.text
       }}</label>
     </div>

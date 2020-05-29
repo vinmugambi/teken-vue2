@@ -2,7 +2,7 @@
   <div class="block relative">
     <select :value="value" @change="$emit('change', $event.target.value)">
       <!-- <option value>{{input.placeholder}}</option> -->
-      <option v-for="option in options" :key="`${option.value}-option`">{{
+      <option v-for="(option,index) in options" :key="`${option.value}-${index}`">{{
         option.text
       }}</option>
     </select>
