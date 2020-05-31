@@ -1,7 +1,7 @@
 <template>
   <div class="block relative">
     <select :value="value" @input="$emit('input', $event.target.value)">
-      <option value disabled class="text-gray-500">{{ placeholder }}</option>
+      <option value class="text-gray-500">{{ placeholder }}</option>
       <option
         v-for="(option, index) in options"
         :key="`${option.value}-${index}`"

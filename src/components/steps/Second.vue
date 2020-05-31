@@ -8,6 +8,34 @@
         :schema="showing"
         @change="update($event)"
       />
+
+      Continue with:
+      <div
+        class="px-2 py-1 my-1 rounded border-2 border-blue-200"
+        v-for="qualify in qualifies"
+        :key="`${qualify.label}-qualify`"
+      >
+        <div class="flex">
+          <div class="w-3/4">
+            {{ qualify.label }}
+            <span class="uppercase">{{ formData.visaPurpose }}</span> visa
+          </div>
+          <div>
+            USD 100
+          </div>
+        </div>
+
+        <div class="flex text-xs text-gray-800">
+          <details class="flex-1">
+            <summary>Details</summary>
+            Something small enough to escape casual notice.
+          </details>
+          <details class="flex-1">
+            <summary>Pricing</summary>
+            Something small enough to escape casual notice.
+          </details>
+        </div>
+      </div>
     </template>
     <template v-slot:navigation>
       <my-button variant="primary" @click="$emit('next')">Next</my-button>
@@ -16,7 +44,7 @@
 </template>
 
 <script>
-import { reactive, set, computed, watch } from "@vue/composition-api";
+import { reactive, set, computed, watchEffect } from "@vue/composition-api";
 
 import StepLayout from "./StepLayout.vue";
 
@@ -27,14 +55,45 @@ import TextInput from "../form/TextInput";
 
 import MyButton from "../navigation/Button.vue";
 
-import { allNationalities } from "../../utils/countries.js";
+import {
+  allNationalities,
+  eligibleNationalities
+} from "../../utils/countries.js";
 
 export default {
   components: { StepLayout, FormFactory, MyButton },
   setup() {
-    const formData = reactive({});
+    const formData = reactive({
+      passport: null,
+      nationality: null,
+      visaType: null,
+      visaPurpose: null
+    });
     const schema = reactive(SCHEMA);
-    const eligible = reactive({ regular: { type: "" } });
+    const eligible = reactive({
+      electronic: { label: "E", qualify: true },
+      regular: { label: "Regular", qualify: true }
+    });
+
+    const qualifies = computed(() => {
+      let qualifies = [];
+      for (let type in eligible) {
+        if (eligible[type].qualify === true) {
+          qualifies.push(eligible[type]);
+        }
+      }
+      return qualifies;
+    });
+
+    watchEffect(() => {
+      if (formData.passport !== "ordinary") {
+        eligible.electronic.qualify = false;
+      } else if (!eligibleNationalities.includes(formData.nationality)) {
+        eligible.electronic.qualify = false;
+      } else {
+        eligible.electronic.qualify = true;
+      }
+    });
 
     const showing = computed(() => {
       let showingFields = {};
@@ -63,16 +122,13 @@ export default {
       } else return;
     }
 
-    watch(formData,(newValue, oldValue)=> {
-      console.log(newValue)
-    })
-
     return {
       formData,
       schema,
       showing,
       update,
-      eligible
+      eligible,
+      qualifies
     };
   }
 };
