@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-sm mx-auto px-2">
+  <div class="max-w-sm mx-auto">
     <div class="bg-white rounded shadow">
       <div class="flex">
         <slot name="header"></slot>

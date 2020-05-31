@@ -1,5 +1,5 @@
 <template>
-    <label :for="inputId">{{label}} </label>
+    <label class="block text-sm font-mono font-semibold" :for="inputId">{{label}} </label>
 </template>
 
 <script>
@@ -10,9 +10,3 @@ export default {
     }
 }
 </script>
-
-<style lang="postcss" scoped>
-label {
-    @apply block text-gray-800 text-sm font-bold mb-1 tracking-tight text-base font-semibold;
-}
-</style>

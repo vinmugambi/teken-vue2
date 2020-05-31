@@ -1,10 +1,12 @@
 <template>
   <div class="block relative">
-    <select :value="value" @change="$emit('change', $event.target.value)">
-      <!-- <option value>{{input.placeholder}}</option> -->
-      <option v-for="(option,index) in options" :key="`${option.value}-${index}`">{{
-        option.text
-      }}</option>
+    <select :value="value" @input="$emit('input', $event.target.value)">
+      <option value disabled class="text-gray-500">{{ placeholder }}</option>
+      <option
+        v-for="(option, index) in options"
+        :key="`${option.value}-${index}`"
+        >{{ option.text }}</option
+      >
     </select>
     <div
       class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
@@ -29,18 +31,17 @@ export default {
       type: String,
       required: false
     },
-    options: { type: Array, required: true }
+    options: { type: Array, required: true },
+    placeholder: { type: String, required: false, default: () => "Select" }
   }
 };
 </script>
 <style lang="postcss">
 select {
-  @apply block appearance-none text-sm w-full bg-white border border-gray-400 px-2 py-1 pr-8 rounded tracking-tighter;
+  @apply block w-full border  px-2 py-1  appearance-none bg-gray-200 rounded tracking-tighter;
 }
 select:focus {
   @apply outline-none border-blue-400;
 }
-select option {
-  @apply text-xs;
-}
+
 </style>

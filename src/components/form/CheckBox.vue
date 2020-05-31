@@ -24,7 +24,7 @@ export default {
   setup(props, { emit }) {
     const checked = computed({
       set: value => {
-        emit("change", value);
+        emit("input", value);
       },
       get: () => {
         return props.value || [];

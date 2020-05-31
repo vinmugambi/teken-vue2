@@ -4,7 +4,7 @@
       <input
         type="radio"
         :id="`${option.value}-${index}`"
-        @change="$emit('change', $event.target.value)"
+        @change="$emit('input', $event.target.value)"
         :value="option.value"
         :checked="option.value === value"
       />

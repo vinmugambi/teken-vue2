@@ -1,9 +1,10 @@
 <template>
   <input
     type="text"
-    class="block w-full py-1 px-2 rounded border focus:bg-gray-100 focus:outline-none"
+    :class="error ? 'border border-red-300' : 'border'"
+    class="block w-full py-1 px-2 rounded focus:bg-gray-100 focus:outline-none focus:border-blue-600"
     :value="value"
-    @change="$emit('change', $event.target.value)"
+    @change="$emit('input', $event.target.value)"
   />
 </template>
 
@@ -12,8 +13,12 @@
 export default {
   props: {
     value: {
-      required: true,
+      default: () => "",
       type: String
+    },
+    error: {
+      type: Boolean,
+      default: () => false
     }
   }
 };

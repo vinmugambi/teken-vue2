@@ -1,27 +1,51 @@
 <template>
-  <div>
+  <form submit.prevent>
     <div class="py-2" v-for="field in fields" :key="field.model">
-      <input-label
-        v-if="!field.schema"
-        :label="field.label"
-        :input-id="safeId(field)"
-      />
-      <component
-        :is="field.component"
-        v-bind="bindAttrs(field)"
-        :id="safeId(field)"
-        @change="update(field.model, $event)"
-        :value="fieldValue(field)"
-        :options="!!field.choices ? field.choices : false"
-      />
+      <Validate
+        :rules="field.validation"
+        v-slot="{ errors }"
+        :name="field.label"
+      >
+        <div
+          :class="
+            errors.length > 0
+              ? 'pl-2 -ml-2 border-l-2 border-red-400 rounded'
+              : ''
+          "
+        >
+          <input-label
+            v-if="!field.schema"
+            :label="field.label"
+            :input-id="safeId(field)"
+          />
+          <component
+            :is="field.component"
+            :error="true ? errors.length > 0 : false"
+            v-bind="bindAttrs(field)"
+            :id="safeId(field)"
+            @input="update(field.model, $event)"
+            :value="value[field.model]"
+            :options="!!field.choices ? field.choices : false"
+            :placeholder="!!field.placeholder ? field.placeholder : undefined"
+          />
+          <span class="block h-4 text-xs  text-red-700">{{ errors[0] }}</span>
+        </div>
+      </Validate>
     </div>
-  </div>
+  </form>
 </template>
 
 <script lang="js">
 import { computed, defineComponent} from "@vue/composition-api";
+import { ValidationProvider as Validate, extend } from 'vee-validate';
+import { required } from "vee-validate/dist/rules";
 
 import inputLabel from "./InputLabel.vue";
+
+extend('required', {
+  ...required,
+  message: '{_field_} is required'
+});
 
 export default defineComponent({
   props: {
@@ -29,7 +53,7 @@ export default defineComponent({
     value: { type: Object, required: true },
     shared: { type: Object }
   },
-  components: { inputLabel },
+  components: { inputLabel, Validate},
   setup(props, { emit }) {
    const fields = computed(() => {
       let fields = [];
@@ -40,22 +64,12 @@ export default defineComponent({
     });
 
     function safeId(field){
-      return field.model.replace(/\s+/g, "-");
-    }
-
-    function fieldValue(field){
-       return props.value[field.model];
+      return field.label.replace(/\s+/g, "-");
     }
 
     function bindAttrs(field) {
-      return {...field.attrs}
+      return {...field.attrs, name: [field.model]}
     }
-    // const val = field => {
-    //   if (field.schema && !props.value[field.model]) {
-    //     return {};
-    //   }
-    //   return props.value[field.model];
-    // };
 
     function update(property, value) {
       emit("change", {
@@ -65,7 +79,6 @@ export default defineComponent({
 
     return {
       fields,
-      fieldValue,
       bindAttrs,
       update,
       safeId,
