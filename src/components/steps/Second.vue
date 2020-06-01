@@ -1,41 +1,12 @@
 <template>
   <step-layout>
-    <template v-slot:header> </template>
-    <template v-slot:title> <h2>Choose your visa type</h2> </template>
+    <template v-slot:header></template>
+    <template v-slot:title>
+      <h2>Choose your visa type</h2>
+    </template>
     <template v-slot:content>
-      <form-factory
-        :value="formData"
-        :schema="showing"
-        @change="update($event)"
-      />
-
-      Continue with:
-      <div
-        class="px-2 py-1 my-1 rounded border-2 border-blue-200"
-        v-for="qualify in qualifies"
-        :key="`${qualify.label}-qualify`"
-      >
-        <div class="flex">
-          <div class="w-3/4">
-            {{ qualify.label }}
-            <span class="uppercase">{{ formData.visaPurpose }}</span> visa
-          </div>
-          <div>
-            USD 100
-          </div>
-        </div>
-
-        <div class="flex text-xs text-gray-800">
-          <details class="flex-1">
-            <summary>Details</summary>
-            Something small enough to escape casual notice.
-          </details>
-          <details class="flex-1">
-            <summary>Pricing</summary>
-            Something small enough to escape casual notice.
-          </details>
-        </div>
-      </div>
+      <form-factory :value="formData" :schema="showing" @change="update($event)" />Continue with:
+      <choice-box value="electronic" :options="qualifies" />
     </template>
     <template v-slot:navigation>
       <my-button variant="primary" @click="$emit('next')">Next</my-button>
@@ -52,6 +23,7 @@ import FormFactory from "../form/FormFactory.vue";
 import SelectBox from "../form/SelectBox.vue";
 import RadioInput from "../form/RadioInput.vue";
 import TextInput from "../form/TextInput";
+import ChoiceBox from "../form/ChoiceBox";
 
 import MyButton from "../navigation/Button.vue";
 
@@ -61,7 +33,7 @@ import {
 } from "../../utils/countries.js";
 
 export default {
-  components: { StepLayout, FormFactory, MyButton },
+  components: { StepLayout, FormFactory, MyButton, ChoiceBox },
   setup() {
     const formData = reactive({
       passport: null,
@@ -71,18 +43,30 @@ export default {
     });
     const schema = reactive(SCHEMA);
     const eligible = reactive({
-      electronic: { label: "E", qualify: true },
-      regular: { label: "Regular", qualify: true }
+      electronic: {
+        label: "",
+        value: "electronic",
+        qualify: true,
+        pricing: "USD 83.00"
+      },
+      regular: {
+        label: "",
+        value: "regular",
+        qualify: true,
+        pricing: "USD 88.00"
+      }
     });
 
-    const qualifies = computed(() => {
-      let qualifies = [];
-      for (let type in eligible) {
-        if (eligible[type].qualify === true) {
-          qualifies.push(eligible[type]);
+    const qualifies = computed({
+      get() {
+        let qualifies = [];
+        for (let type in eligible) {
+          if (eligible[type].qualify === true) {
+            qualifies.push(eligible[type]);
+          }
         }
+        return qualifies;
       }
-      return qualifies;
     });
 
     watchEffect(() => {
@@ -119,6 +103,10 @@ export default {
           schema.visaPurpose.choices = visaPurposes[value];
         }
         schema.visaPurpose.visible = true;
+        let visaType = value === "other" ? "" : value;
+        for (let type in eligible) {
+          eligible[type].label = `${eligible[type].value} ${visaType}`;
+        }
       } else return;
     }
 
@@ -175,13 +163,14 @@ const SCHEMA = {
     label: "Passport type",
     component: RadioInput,
     choices: passportTypes,
-    validation: "required"
+    validation: "required",
+    help: "Type of the passport you are travelling with. If not sure, enter ordinary"
   },
   nationality: {
     label: "Nationality",
     component: SelectBox,
     choices: nations,
-    placeholder: "Select your nationality",
+    attrs: { placeholder: "Select your nationality" },
     validation: "required"
   },
   visaType: {
@@ -196,6 +185,14 @@ const SCHEMA = {
     choices: [],
     visible: false,
     validation: "required"
+  },
+  duration: {
+    label: "Duration of visit (in months)",
+    component: TextInput,
+    visible: true,
+    help: "Enter 1 if you are going to stay for less than a month",
+    validation: "required|between:1,60",
+    attrs: { placeholder: "How long are you going to stay in India", type:"number", min: "1", max: "60"}
   }
 };
 </script>

@@ -1,11 +1,7 @@
 <template>
   <form submit.prevent>
     <div class="py-2" v-for="field in fields" :key="field.model">
-      <Validate
-        :rules="field.validation"
-        v-slot="{ errors }"
-        :name="field.label"
-      >
+      <Validate :rules="field.validation" v-slot="{ errors }" :name="field.label">
         <div
           :class="
             errors.length > 0
@@ -13,11 +9,10 @@
               : ''
           "
         >
-          <input-label
-            v-if="!field.schema"
-            :label="field.label"
-            :input-id="safeId(field)"
-          />
+          <input-label v-if="!field.schema" :label="field.label" :input-id="safeId(field)" />
+          <p v-if="field.help" class="text-xs text-gray-600">
+            {{field.help}}
+          </p>
           <component
             :is="field.component"
             :error="true ? errors.length > 0 : false"
@@ -25,10 +20,9 @@
             :id="safeId(field)"
             @input="update(field.model, $event)"
             :value="value[field.model]"
-            :options="!!field.choices ? field.choices : false"
-            :placeholder="!!field.placeholder ? field.placeholder : undefined"
+            :options="!!field.choices ? field.choices : null"
           />
-          <span class="block h-4 text-xs  text-red-700">{{ errors[0] }}</span>
+          <span class="block h-4 text-xs text-red-700">{{ errors[0] }}</span>
         </div>
       </Validate>
     </div>
@@ -38,7 +32,7 @@
 <script lang="js">
 import { computed, defineComponent} from "@vue/composition-api";
 import { ValidationProvider as Validate, extend } from 'vee-validate';
-import { required } from "vee-validate/dist/rules";
+import { required, between } from "vee-validate/dist/rules";
 
 import inputLabel from "./InputLabel.vue";
 
@@ -46,6 +40,10 @@ extend('required', {
   ...required,
   message: '{_field_} is required'
 });
+extend('between', {
+  ...between,
+  message: `{_field_} should be between {min} and {max}`
+})
 
 export default defineComponent({
   props: {
