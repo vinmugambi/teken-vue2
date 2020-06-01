@@ -5,7 +5,11 @@
       <h2>Choose your visa type</h2>
     </template>
     <template v-slot:content>
-      <form-factory :value="formData" :schema="showing" @change="update($event)" />Continue with:
+      <form-factory
+        :value="formData"
+        :schema="showing"
+        @change="update($event)"
+      />Continue with:
       <choice-box value="electronic" :options="qualifies" />
     </template>
     <template v-slot:navigation>
@@ -164,7 +168,8 @@ const SCHEMA = {
     component: RadioInput,
     choices: passportTypes,
     validation: "required",
-    help: "Type of the passport you are travelling with. If not sure, enter ordinary"
+    help:
+      "Type of the passport you are travelling with. If not sure, enter ordinary"
   },
   nationality: {
     label: "Nationality",
@@ -187,12 +192,81 @@ const SCHEMA = {
     validation: "required"
   },
   duration: {
-    label: "Duration of visit (in months)",
-    component: TextInput,
+    label: "Duration of visa (in months)",
+    component: RadioInput,
     visible: true,
     help: "Enter 1 if you are going to stay for less than a month",
     validation: "required|between:1,60",
-    attrs: { placeholder: "How long are you going to stay in India", type:"number", min: "1", max: "60"}
+    attrs: {
+      placeholder: "How long are you going to stay in India",
+      type: "number",
+      min: "1",
+      max: "60"
+    }
   }
 };
+
+const evisaPrices = [
+  {
+    price: 25,
+    tourist: 1,
+    nationality: { except: ["ARGENTINA", "SOUTH AFRICA"] }
+  },
+  {
+    price: 80,
+    conference: 1,
+    medical: 2,
+    business: 12,
+    tourist: 60,
+    nationality: {
+      except: [
+        "ARGENTINA",
+        "SOUTH AFRICA",
+        "UNITED STATES OF AMERICA",
+        "UNITED KINGDOM"
+      ]
+    }
+  },
+  {
+    price: 100,
+    medical: 2,
+    business: 12,
+    nationality: { is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"] }
+  },
+  {
+    price: 80,
+    tourist: 60,
+    nationality: { is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"] }
+  }
+];
+
+const durations = [
+  {
+    text: "1 month - single entry",
+    value: 1,
+    tourist: "electronic",
+    conference: "electronic",
+    purpose: { tourist: ["electronic"], conference: ["electronic"] },
+    extendable: false
+  },
+  {
+    text: "2 months - double entry",
+    value: "2",
+    medical: "electronic",
+    extendable: true
+  },
+  {
+    text: "Up to 6 months - triple entry",
+    value: "6",
+    medical: "regular"
+  },
+  {
+    text: "One year - multiple entry",
+    value: 12,
+    tourist: ["electronic", "regular"],
+    medical: "regular",
+    business: ["regular", "electronic"]
+  },
+  { text: "5 years multiple entry", value: 60, tourist: "electronic" }
+];
 </script>
