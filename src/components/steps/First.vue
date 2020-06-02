@@ -17,7 +17,7 @@
     </template>
 
     <template v-slot:title>
-      <h1>Apply for Indian visa</h1>
+      <h1>Apply for Indian e-visa</h1>
     </template>
 
     <template v-slot:content>

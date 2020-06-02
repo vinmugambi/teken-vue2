@@ -19,7 +19,7 @@
 export default {
   props: {
     value: { type: String, required: false, default: () => "" },
-    options: { type: Array, required: true }
+    options: { type: Array, required: true}
   }
 };
 </script>

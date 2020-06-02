@@ -22,19 +22,14 @@
 import { reactive, set, computed, watchEffect } from "@vue/composition-api";
 
 import StepLayout from "./StepLayout.vue";
-
-import FormFactory from "../form/FormFactory.vue";
-import SelectBox from "../form/SelectBox.vue";
-import RadioInput from "../form/RadioInput.vue";
-import TextInput from "../form/TextInput";
-import ChoiceBox from "../form/ChoiceBox";
-
 import MyButton from "../navigation/Button.vue";
+import FormFactory from "../form/FormFactory.vue";
+import ChoiceBox from "../form/ChoiceBox";
+import TextInput from "../form/TextInput";
+import RadioInput from "../form/RadioInput.vue";
 
-import {
-  allNationalities,
-  eligibleNationalities
-} from "../../utils/countries.js";
+import { SCHEMA, visaPurposes, getDurations } from "./second.js";
+import { eligibleNationalities } from "../../utils/countries.js";
 
 export default {
   components: { StepLayout, FormFactory, MyButton, ChoiceBox },
@@ -102,10 +97,15 @@ export default {
       if (property === "visaType") {
         if (value === "other") {
           schema.visaPurpose.component = TextInput;
+          schema.visaPurpose.help =
+            "Briefly describe the reason for your travel";
         } else {
           schema.visaPurpose.component = RadioInput;
           schema.visaPurpose.choices = visaPurposes[value];
         }
+        schema.duration.choices = getDurations(value);
+        schema.duration.component = RadioInput;
+        schema.duration.visible = true;
         schema.visaPurpose.visible = true;
         let visaType = value === "other" ? "" : value;
         for (let type in eligible) {
@@ -124,149 +124,4 @@ export default {
     };
   }
 };
-
-const nations = allNationalities.map(nation => {
-  return { value: nation.value, text: nation.country };
-});
-
-const visaTypes = [
-  { text: "Tourist", value: "tourist" },
-  { text: "Business", value: "business" },
-  { text: "Medical", value: "medical" },
-  { text: "Other", value: "other" }
-];
-
-const visaPurposes = {
-  tourist: [
-    { text: "Visit family or friend", value: "visit" },
-    { text: "General tour/ Sight seeing", value: "tour" }
-  ],
-  business: [
-    { text: "Business/technical meetings or training", value: "meeting" },
-    { text: "Trade fair", value: "fair" },
-    { text: "Purchase or trade", value: "trade" },
-    { text: "Other", value: "other" }
-  ],
-  medical: [
-    { text: "Treatment - for patients", value: "patient" },
-    { text: "Attendant - accompanying a patient", value: "attendant" },
-    { text: "Visiting a patient", value: "visitor" }
-  ]
-};
-
-const passportTypes = [
-  { text: "Ordinary", value: "ordinary" },
-  { text: "Diplomatic", value: "diplomatic" },
-  { text: "Service", value: "service" },
-  { text: "Refugee", value: "refugee" },
-  { text: "Other type not listed", value: "other" }
-];
-
-const SCHEMA = {
-  passport: {
-    label: "Passport type",
-    component: RadioInput,
-    choices: passportTypes,
-    validation: "required",
-    help:
-      "Type of the passport you are travelling with. If not sure, enter ordinary"
-  },
-  nationality: {
-    label: "Nationality",
-    component: SelectBox,
-    choices: nations,
-    attrs: { placeholder: "Select your nationality" },
-    validation: "required"
-  },
-  visaType: {
-    label: "Visa type",
-    component: RadioInput,
-    choices: visaTypes,
-    validation: "required"
-  },
-  visaPurpose: {
-    label: "Purpose of travel",
-    component: RadioInput,
-    choices: [],
-    visible: false,
-    validation: "required"
-  },
-  duration: {
-    label: "Duration of visa (in months)",
-    component: RadioInput,
-    visible: true,
-    help: "Enter 1 if you are going to stay for less than a month",
-    validation: "required|between:1,60",
-    attrs: {
-      placeholder: "How long are you going to stay in India",
-      type: "number",
-      min: "1",
-      max: "60"
-    }
-  }
-};
-
-const evisaPrices = [
-  {
-    price: 25,
-    tourist: 1,
-    nationality: { except: ["ARGENTINA", "SOUTH AFRICA"] }
-  },
-  {
-    price: 80,
-    conference: 1,
-    medical: 2,
-    business: 12,
-    tourist: 60,
-    nationality: {
-      except: [
-        "ARGENTINA",
-        "SOUTH AFRICA",
-        "UNITED STATES OF AMERICA",
-        "UNITED KINGDOM"
-      ]
-    }
-  },
-  {
-    price: 100,
-    medical: 2,
-    business: 12,
-    nationality: { is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"] }
-  },
-  {
-    price: 80,
-    tourist: 60,
-    nationality: { is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"] }
-  }
-];
-
-const durations = [
-  {
-    text: "1 month - single entry",
-    value: 1,
-    tourist: "electronic",
-    conference: "electronic",
-    purpose: { tourist: ["electronic"], conference: ["electronic"] },
-    extendable: false
-  },
-  {
-    text: "2 months - double entry",
-    value: "2",
-    medical: "electronic",
-    extendable: true
-  },
-  {
-    text: "Up to 6 months - triple entry",
-    value: "6",
-    medical: "regular"
-  },
-  {
-    text: "One year - multiple entry",
-    value: 12,
-    tourist: ["electronic", "regular"],
-    medical: "regular",
-    business: ["regular", "electronic"]
-  },
-  { text: "5 years multiple entry", value: 60, tourist: "electronic" }
-];
 </script>

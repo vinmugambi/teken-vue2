@@ -18,9 +18,3 @@
     </div>
   </div>
 </template>
-
-<style lang="postcss">
-h1 {
-  @apply font-bold;
-}
-</style>
