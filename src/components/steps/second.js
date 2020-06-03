@@ -55,12 +55,14 @@ export const SCHEMA = {
     choices: nations,
     attrs: { placeholder: "Select your nationality" },
     validation: "required",
+    visible: false,
   },
   visaType: {
     label: "Visa type",
     component: RadioInput,
     choices: visaTypes,
     validation: "required",
+    visible: false,
   },
   visaPurpose: {
     label: "Purpose of travel",
@@ -156,5 +158,5 @@ export const getDurations = (visaType) => {
   let durationValues = visaDurations.map((duration) => {
     return { text: duration.text, value: duration.value };
   });
-  return durationValues
+  return durationValues;
 };

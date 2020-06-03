@@ -5,7 +5,7 @@
         <slot name="header"></slot>
       </div>
       <div class="p-4">
-        <div class="pb-4 text-2xl">
+        <div class="pb-4 text-sm">
           <slot name="title"></slot>
         </div>
         <div>
@@ -18,3 +18,15 @@
     </div>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+h1 {
+  @apply text-3xl;
+}
+h2 {
+  @apply text-2xl;
+}
+h4 {
+  @apply font-bold;
+}
+</style>
