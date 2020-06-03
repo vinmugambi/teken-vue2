@@ -11,7 +11,7 @@ const visaTypes = [
   { text: "Tourist", value: "tourist" },
   { text: "Business", value: "business" },
   { text: "Medical", value: "medical" },
-  { text: "Other", value: "other" },
+  { text: "Conference", value: "conference" },
 ];
 
 export const visaPurposes = {
@@ -39,6 +39,7 @@ const passportTypes = [
   { text: "Refugee", value: "refugee" },
   { text: "Other type not listed", value: "other" },
 ];
+
 
 export const SCHEMA = {
   passport: {
@@ -72,10 +73,10 @@ export const SCHEMA = {
     validation: "required",
   },
   duration: {
-    label: "Duration of visa (in months)",
-    component: null,
+    label: "Duration of visa",
+    component: RadioInput,
     visible: false,
-    validation: "required|between:1,60",
+    validation: "required",
     options: [],
     attrs: {
       placeholder: "How long are you going to stay in India",
@@ -130,13 +131,13 @@ const durations = [
   },
   {
     text: "2 months - double entry",
-    value: "2",
+    value: 2,
     medical: "electronic",
     extendable: true,
   },
   {
     text: "Up to 6 months - triple entry",
-    value: "6",
+    value: 6,
     medical: "regular",
   },
   {

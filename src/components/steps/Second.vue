@@ -33,8 +33,8 @@ import FormFactory from "../form/FormFactory.vue";
 // import RadioInput from "../form/RadioInput.vue";
 import NotQualify from "../alerts/NotQualify.vue";
 
-import { SCHEMA } from "./second.js";
-// import { eligibleNationalities } from "../../utils/countries.js";
+import { SCHEMA, visaPurposes, getDurations } from "./second.js";
+import { eligibleNationalities } from "../../utils/countries.js";
 
 const indexedSchema = () => {
   let indexed = {};
@@ -56,6 +56,7 @@ export default {
     function update(field) {
       let property = Object.keys(field)[0];
       let currentIndex = schema[property].index;
+      if (currentIndex === 2) showVisaPurpose(field[property]);
       showNext(currentIndex);
       // showVisaPurpose(property, field[property]);
       set(formData, property, field[property]);
@@ -73,7 +74,6 @@ export default {
 
     const showNext = currentIndex => {
       for (let question in schema) {
-        // console.log(schema[question].index);
         if (schema[question].index === currentIndex + 1) {
           schema[question].visible = true;
         }
@@ -82,27 +82,18 @@ export default {
 
     const qualify = ref(true);
     watchEffect(() => {
-      if (formData.passport !== "ordinary") {
-        qualify.value = false;
-      }
+      let p = formData.passport;
+      let n = formData.nationality;
+      qualify.value =
+        p === "ordinary" && (n === null || eligibleNationalities.includes(n));
     });
 
-    // function showVisaPurpose(property, value) {
-    //   if (property === "visaType") {
-    //     if (value === "other") {
-    //       schema.visaPurpose.component = TextInput;
-    //       schema.visaPurpose.help =
-    //         "Briefly describe the reason for your travel";
-    //     } else {
-    //       schema.visaPurpose.component = RadioInput;
-    //       schema.visaPurpose.choices = visaPurposes[value];
-    //     }
-    //     schema.duration.choices = getDurations(value);
-    //     schema.duration.component = RadioInput;
-    //     schema.duration.visible = true;
-    //     schema.visaPurpose.visible = true;
-    //   } else return;
-    // }
+    function showVisaPurpose(value) {
+      if (value !== "conference") {
+        schema.visaPurpose.choices = visaPurposes[value];
+        schema.duration.choices = getDurations(value);
+      }
+    }
 
     return {
       formData,

@@ -1,5 +1,5 @@
 <template>
-    <label class="block text-sm font-mono font-semibold" :for="inputId">{{label}} </label>
+    <label class="block text-sm font-semibold" :for="inputId">{{label}} </label>
 </template>
 
 <script>
