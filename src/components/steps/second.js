@@ -184,3 +184,8 @@ export const getDurations = (visaType) => {
   });
   return durationValues;
 };
+
+export const getDurationLabel = (durationValue) => {
+  let label = durations.filter((duration) => duration.value === durationValue);
+  return label[0].text;
+};

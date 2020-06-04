@@ -13,12 +13,39 @@
         :schema="showing"
         @change="update($event)"
       />
-      <!-- <choice-box value="electronic" :options="qualifies" /> -->
+      <div v-if="isComplete && qualify">
+        <span class="px-1 text-xs text-gray-700">visa summary</span>
+        <div class="p-2  rounded bg-blue-100">
+          <div class="flex justify-between">
+            <div class="text-lg h-8">
+              <span> e-{{ formData.visaType }} visa </span>
+            </div>
+            <div class="flex items-center">USD {{ price }}</div>
+          </div>
+          <div>
+            <span class="pr-2 text-xs uppercase tracking-tight text-gray-600">{{
+              getLabel(formData.duration)
+            }}</span>
+            <a
+              href="#"
+              class="inline-block pr-2 z-10 text-gray-600 text-xs underline"
+              >details</a
+            >
+            <a href="#" class="z-10 text-gray-600 text-xs underline"
+              >pricing?</a
+            >
+          </div>
+        </div>
+      </div>
     </template>
 
     <template v-slot:navigation>
-      <not-qualify v-if="!qualify"></not-qualify>
-      <my-button v-else variant="primary" @click="$emit('next')"
+      <not-qualify v-if="!qualify" />
+      <my-button
+        :disabled="!isComplete"
+        v-else
+        variant="primary"
+        @click="$emit('next')"
         >Continue</my-button
       >
     </template>
@@ -42,7 +69,13 @@ import FormFactory from "../form/FormFactory.vue";
 // import RadioInput from "../form/RadioInput.vue";
 import NotQualify from "../alerts/NotQualify.vue";
 
-import { SCHEMA, visaPurposes, getDurations, getPrice } from "./second.js";
+import {
+  SCHEMA,
+  visaPurposes,
+  getDurations,
+  getDurationLabel,
+  getPrice
+} from "./second.js";
 import { eligibleNationalities } from "../../utils/countries.js";
 
 const indexedSchema = () => {
@@ -148,6 +181,10 @@ export default {
 
     const price = ref(null);
 
+    function getLabel(duration) {
+      return getDurationLabel(duration);
+    }
+
     return {
       formData,
       schema,
@@ -155,7 +192,8 @@ export default {
       update,
       qualify,
       isComplete,
-      price
+      price,
+      getLabel
       // eligible,
       // qualifies
     };
