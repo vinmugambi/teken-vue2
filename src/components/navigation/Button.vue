@@ -49,13 +49,13 @@ export default {
   animation-timing-function: ease-out;
 }
 .btn-primary {
-  @apply bg-blue-700 text-white;
+  @apply bg-primary-600 text-white;
 }
 .btn-primary:hover:enabled {
-  @apply bg-blue-500;
+  @apply bg-primary-500;
 }
 .btn-primary:focus:enabled {
-  @apply bg-blue-800;
+  @apply bg-primary-700;
 }
 .btn-default {
   @apply border text-gray-700 bg-gray-200;

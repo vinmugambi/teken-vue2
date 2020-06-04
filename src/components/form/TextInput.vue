@@ -2,7 +2,7 @@
   <input
     type="text"
     :class="error ? 'border border-red-300' : 'border'"
-    class="block w-full py-1 px-2 rounded focus:bg-gray-100 focus:outline-none focus:border-blue-600"
+    class="block w-full py-1 px-2 rounded focus:bg-gray-100 focus:outline-none focus:border-primary-400"
     :value="value"
     @change="$emit('input', $event.target.value)"
   />

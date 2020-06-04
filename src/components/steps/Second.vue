@@ -3,15 +3,24 @@
     <template v-slot:header></template>
     <template v-slot:title>
       <h2>Choose your visa type</h2>
-      <p class="px-1 text-gray-700">Complete this section to decide the apropriate visa type</p>
+      <p class="px-1 text-gray-700">
+        Complete this section to decide the apropriate visa type
+      </p>
     </template>
     <template v-slot:content>
-      <form-factory :value="formData" :schema="showing" @change="update($event)" />
+      <form-factory
+        :value="formData"
+        :schema="showing"
+        @change="update($event)"
+      />
       <!-- <choice-box value="electronic" :options="qualifies" /> -->
     </template>
-    <not-qualify v-if="!qualify" />
+
     <template v-slot:navigation>
-      <my-button variant="primary" @click="$emit('next')">Next</my-button>
+      <not-qualify v-if="!qualify"></not-qualify>
+      <my-button v-else variant="primary" @click="$emit('next')"
+        >Next</my-button
+      >
     </template>
   </step-layout>
 </template>
@@ -55,11 +64,14 @@ export default {
     });
     function update(field) {
       let property = Object.keys(field)[0];
-      let currentIndex = schema[property].index;
-      if (currentIndex === 2) showVisaPurpose(field[property]);
-      showNext(currentIndex);
-      // showVisaPurpose(property, field[property]);
       set(formData, property, field[property]);
+      setQualify();
+      let currentIndex = schema[property].index;
+      let noShow = currentIndex === 2 && field[property] === "conference";
+      if (currentIndex === 2 && field[property] !== "conference") {
+        showVisaPurpose(field[property]);
+      }
+      if (!noShow) showNext(currentIndex);
     }
 
     const schema = reactive(indexedSchema());
@@ -71,28 +83,42 @@ export default {
       }
       return showingFields;
     });
-
     const showNext = currentIndex => {
-      for (let question in schema) {
-        if (schema[question].index === currentIndex + 1) {
-          schema[question].visible = true;
+      console.log(currentIndex, qualify.value);
+      if (qualify.value === true) {
+        for (let question in schema) {
+          if (schema[question].index === currentIndex + 1) {
+            schema[question].visible = true;
+          }
+        }
+      } else {
+        for (let question in schema) {
+          if (schema[question].index > currentIndex) {
+            schema[question].visible = false;
+          }
         }
       }
     };
+    watchEffect(() => {
+      if (formData.visaType === "conference") {
+        schema.visaPurpose.visible = false;
+        schema.duration.visible = false;
+      }
+    });
+    function showVisaPurpose(value) {
+      schema.visaPurpose.choices = visaPurposes[value];
+      schema.duration.choices = getDurations(value);
+    }
 
     const qualify = ref(true);
-    watchEffect(() => {
+    function setQualify() {
       let p = formData.passport;
       let n = formData.nationality;
       qualify.value =
-        p === "ordinary" && (n === null || eligibleNationalities.includes(n));
-    });
-
-    function showVisaPurpose(value) {
-      if (value !== "conference") {
-        schema.visaPurpose.choices = visaPurposes[value];
-        schema.duration.choices = getDurations(value);
-      }
+        (p === "ordinary" || p === null) &&
+        (n === null ||
+          eligibleNationalities.includes(n) ||
+          schema.nationality.visible === false);
     }
 
     return {
@@ -106,45 +132,4 @@ export default {
     };
   }
 };
-
-// const eligible = reactive({
-//   electronic: {
-//     label: "",
-//     value: "electronic",
-//     qualify: true,
-//     pricing: "USD 83.00"
-//   },
-//   regular: {
-//     label: "",
-//     value: "regular",
-//     qualify: true,
-//     pricing: "USD 88.00"
-//   }
-// });
-
-// const qualifies = computed({
-//   get() {
-//     let qualifies = [];
-//     for (let type in eligible) {
-//       if (eligible[type].qualify === true) {
-//         qualifies.push(eligible[type]);
-//       }
-//     }
-//     return qualifies;
-//   }
-// });
-
-// let questions = [];
-//     Object.entries(schema).forEach(([key, value]) =>
-//       questions.push({ [key]: value })
-//     );
-//     function* question() {
-//       yield* questions;
-//     }
-//     const nextQuestion = question().next();
-//     function revealNextQuestion() {
-//       if (!nextQuestion.done) {
-//         nextQuestion;
-//       }
-//     }
 </script>
