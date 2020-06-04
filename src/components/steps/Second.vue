@@ -19,7 +19,7 @@
     <template v-slot:navigation>
       <not-qualify v-if="!qualify"></not-qualify>
       <my-button v-else variant="primary" @click="$emit('next')"
-        >Next</my-button
+        >Continue</my-button
       >
     </template>
   </step-layout>
@@ -42,7 +42,7 @@ import FormFactory from "../form/FormFactory.vue";
 // import RadioInput from "../form/RadioInput.vue";
 import NotQualify from "../alerts/NotQualify.vue";
 
-import { SCHEMA, visaPurposes, getDurations } from "./second.js";
+import { SCHEMA, visaPurposes, getDurations, getPrice } from "./second.js";
 import { eligibleNationalities } from "../../utils/countries.js";
 
 const indexedSchema = () => {
@@ -60,18 +60,31 @@ export default {
       passport: null,
       nationality: null,
       visaType: null,
-      visaPurpose: null
+      visaPurpose: null,
+      duration: null
     });
     function update(field) {
       let property = Object.keys(field)[0];
       set(formData, property, field[property]);
       setQualify();
       let currentIndex = schema[property].index;
-      let noShow = currentIndex === 2 && field[property] === "conference";
+      let conference = currentIndex === 2 && field[property] === "conference";
+      let medical = currentIndex === 3 && formData.visaType === "medical";
+      let business = currentIndex === 3 && formData.visaType === "business";
       if (currentIndex === 2 && field[property] !== "conference") {
         showVisaPurpose(field[property]);
       }
-      if (!noShow) showNext(currentIndex);
+      if (!conference && !medical && !business) showNext(currentIndex);
+      if (conference) {
+        formData.visaPurpose = "conference";
+        formData.duration = "one";
+      }
+      if (medical) {
+        formData.duration = "two";
+      }
+      if (business) {
+        formData.duration = "twelve";
+      }
     }
 
     const schema = reactive(indexedSchema());
@@ -84,7 +97,6 @@ export default {
       return showingFields;
     });
     const showNext = currentIndex => {
-      console.log(currentIndex, qualify.value);
       if (qualify.value === true) {
         for (let question in schema) {
           if (schema[question].index === currentIndex + 1) {
@@ -99,10 +111,21 @@ export default {
         }
       }
     };
+
     watchEffect(() => {
       if (formData.visaType === "conference") {
         schema.visaPurpose.visible = false;
         schema.duration.visible = false;
+      }
+      isComplete.value = Object.keys(formData).every(
+        field => formData[field] !== null
+      );
+      if (isComplete.value === true) {
+        price.value = getPrice(
+          formData.nationality,
+          formData.visaType,
+          formData.duration
+        );
       }
     });
     function showVisaPurpose(value) {
@@ -121,12 +144,18 @@ export default {
           schema.nationality.visible === false);
     }
 
+    const isComplete = ref(false);
+
+    const price = ref(null);
+
     return {
       formData,
       schema,
       showing,
       update,
-      qualify
+      qualify,
+      isComplete,
+      price
       // eligible,
       // qualifies
     };

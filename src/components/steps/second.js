@@ -40,7 +40,6 @@ const passportTypes = [
   { text: "Other type not listed", value: "other" },
 ];
 
-
 export const SCHEMA = {
   passport: {
     label: "Passport type",
@@ -82,72 +81,96 @@ export const SCHEMA = {
       placeholder: "How long are you going to stay in India",
       type: "number",
       min: "1",
-      max: "60",
     },
   },
 };
 
-// const evisaPrices = [
-//   {
-//     price: 25,
-//     tourist: 1,
-//     nationality: { except: ["ARGENTINA", "SOUTH AFRICA"] },
-//   },
-//   {
-//     price: 80,
-//     conference: 1,
-//     medical: 2,
-//     business: 12,
-//     tourist: 60,
-//     nationality: {
-//       except: [
-//         "ARGENTINA",
-//         "SOUTH AFRICA",
-//         "UNITED STATES OF AMERICA",
-//         "UNITED KINGDOM",
-//       ],
-//     },
-//   },
-//   {
-//     price: 100,
-//     medical: 2,
-//     business: 12,
-//     nationality: { is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"] },
-//   },
-//   {
-//     price: 80,
-//     tourist: 60,
-//     nationality: { is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"] },
-//   },
-// ];
+const evisaPrices = [
+  {
+    price: 25,
+    tourist: "one",
+    nationality: { except: ["ARGENTINA", "SOUTH AFRICA"], is: [] },
+  },
+  {
+    price: 40,
+    tourist: "twelve",
+    nationality: { except: ["ARGENTINA", "SOUTH AFRICA"], is: [] },
+  },
+  {
+    price: 80,
+    conference: "one",
+    medical: "two",
+    business: "twelve",
+    tourist: "sixty",
+    nationality: {
+      except: [
+        "ARGENTINA",
+        "SOUTH AFRICA",
+        "UNITED STATES OF AMERICA",
+        "UNITED KINGDOM",
+      ],
+      is: [],
+    },
+  },
+  {
+    price: 100,
+    medical: "two",
+    business: "twelve",
+    nationality: {
+      is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"],
+      except: [],
+    },
+  },
+  {
+    price: 80,
+    tourist: "sixty",
+    nationality: {
+      is: ["UNITED STATES OF AMERICA", "UNITED KINGDOM"],
+      except: [],
+    },
+  },
+];
+
+export const getPrice = (nationality, visaType, duration) => {
+  let price = evisaPrices.filter((price) => {
+    if (Object.keys(price).includes(visaType) && price[visaType] === duration) {
+      if (
+        price.nationality.is.includes(nationality) ||
+        !price.nationality.except.includes(nationality)
+      ) {
+        return true;
+      }
+    }
+  });
+
+  if (price.length > 0) {
+    return price[0].price;
+  } else {
+    return 0;
+  }
+};
 
 const durations = [
   {
     text: "1 month - single entry",
-    value: 1,
+    value: "one",
     tourist: "electronic",
     conference: "electronic",
     extendable: false,
   },
   {
     text: "2 months - double entry",
-    value: 2,
+    value: "two",
     medical: "electronic",
     extendable: true,
   },
   {
-    text: "Up to 6 months - triple entry",
-    value: 6,
-    medical: "regular",
-  },
-  {
     text: "1 year - multiple entry",
-    value: 12,
+    value: "twelve",
     tourist: ["electronic", "regular"],
-    medical: "regular",
     business: ["regular", "electronic"],
   },
-  { text: "5 years multiple entry", value: 60, tourist: "electronic" },
+  { text: "5 years - multiple entry", value: "sixty", tourist: "electronic" },
 ];
 
 export const getDurations = (visaType) => {

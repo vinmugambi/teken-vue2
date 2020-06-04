@@ -6,7 +6,7 @@
         :key="tab.text+index"
         :class="
           index === tabs.activeTabIndex
-            ? 'bg-white border-blue-600 border-t-2'
+            ? 'bg-white border-primary-400 border-t-2'
             : 'bg-gray-200 border-transparent border-t-2'
         "
         class="h-10 flex-1 flex justify-center items-center cursor-pointer font-semibold"

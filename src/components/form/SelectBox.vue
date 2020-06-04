@@ -38,10 +38,13 @@ export default {
 </script>
 <style lang="postcss">
 select {
-  @apply block w-full border  px-2 py-1  appearance-none text-gray-700 bg-gray-200 rounded tracking-tighter;
+  @apply block w-full border  px-2 py-1  appearance-none text-gray-700 rounded tracking-tighter;
 }
 select:focus {
   @apply outline-none border-primary-400;
+}
+select{
+  background-image: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
 }
 
 </style>
