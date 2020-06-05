@@ -4,7 +4,7 @@
     <template v-slot:title>
       <h2>Choose your visa type</h2>
       <p class="px-1 text-gray-700">
-        Complete this section to decide the apropriate visa type
+        Complete this section to decide the apropriate visa type and its price
       </p>
     </template>
     <template v-slot:content>
@@ -15,7 +15,9 @@
       />
       <div v-if="isComplete && qualify">
         <span class="px-1 text-xs text-gray-700">visa summary</span>
-        <div class="p-2  rounded bg-blue-100">
+        <div
+          class="p-2  rounded bg-primary-100 bg-opacity-50 border border-primary-300"
+        >
           <div class="flex justify-between">
             <div class="text-lg h-8">
               <span> e-{{ formData.visaType }} visa </span>
@@ -41,13 +43,15 @@
 
     <template v-slot:navigation>
       <not-qualify v-if="!qualify" />
-      <my-button
-        :disabled="!isComplete"
-        v-else
-        variant="primary"
-        @click="$emit('next')"
-        >Continue</my-button
-      >
+      <div v-else class="py-4 flex justify-between flex-row-reverse">
+        <my-button
+          :disabled="!isComplete"
+          variant="primary"
+          @click="$emit('next')"
+          >Continue</my-button
+        >
+        <my-button @click="$emit('back')">Back</my-button>
+      </div>
     </template>
   </step-layout>
 </template>
@@ -68,6 +72,7 @@ import FormFactory from "../form/FormFactory.vue";
 // import TextInput from "../form/TextInput";
 // import RadioInput from "../form/RadioInput.vue";
 import NotQualify from "../alerts/NotQualify.vue";
+import useLocalStorage from "./useLocalStorage.js";
 
 import {
   SCHEMA,
@@ -158,6 +163,9 @@ export default {
           formData.nationality,
           formData.visaType,
           formData.duration
+        );
+        Object.entries(formData).forEach(([key, value]) =>
+          useLocalStorage.set(key, value)
         );
       }
     });

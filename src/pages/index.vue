@@ -1,8 +1,10 @@
 <template>
   <div class="md:pb-16 pt-2 md:pt-8">
     <first v-if="activeStep === 0" v-on:next="nextStep">{{ activeStep }}</first>
-    <second v-if="activeStep === 1" v-on:next="nextStep">{{ activeStep }}</second>
-    <third v-if="activeStep === 2"  v-on:next="nextStep">{{ activeStep }}</third>
+    <second v-if="activeStep === 1" v-on:next="nextStep">{{
+      activeStep
+    }}</second>
+    <third v-if="activeStep === 2" v-on:back="previousStep" v-on:next="nextStep">{{ activeStep }}</third>
   </div>
 </template>
 
@@ -22,10 +24,14 @@ export default {
     function nextStep() {
         activeStep.value++
     }
+    function previousStep() {
+      activeStep.value--
+    }
 
     return {
       nextStep,
       activeStep,
+      previousStep
     }
   }
 }
