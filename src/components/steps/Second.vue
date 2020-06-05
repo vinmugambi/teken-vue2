@@ -11,7 +11,7 @@
       <form-factory
         :value="formData"
         :schema="showing"
-        @change="update($event)"
+        @input="update($event)"
       />
       <div v-if="isComplete && qualify">
         <span class="px-1 text-xs text-gray-700">visa summary</span>
@@ -45,7 +45,6 @@
       <not-qualify v-if="!qualify" />
       <div v-else class="py-4 flex justify-between flex-row-reverse">
         <my-button
-          :disabled="!isComplete"
           variant="primary"
           @click="$emit('next')"
           >Continue</my-button
@@ -167,6 +166,11 @@ export default {
         Object.entries(formData).forEach(([key, value]) =>
           useLocalStorage.set(key, value)
         );
+      }
+      if (!qualify.value) {
+        formData.visaType = null;
+        formData.duration = null;
+        formData.visaPurpose = null;
       }
     });
     function showVisaPurpose(value) {

@@ -9,7 +9,7 @@
               : ''
           "
         >
-          <input-label v-if="!field.schema" :label="field.label" :input-id="safeId(field)" />
+          <input-label v-if="field.label" :label="field.label" :input-id="safeId(field)" />
           <p v-if="field.help" class="text-xs text-gray-600">
             {{field.help}}
           </p>
@@ -32,7 +32,7 @@
 <script lang="js">
 import { computed, defineComponent} from "@vue/composition-api";
 import { ValidationProvider as Validate, extend } from 'vee-validate';
-import { required, between } from "vee-validate/dist/rules";
+import { required, between,email } from "vee-validate/dist/rules";
 
 import inputLabel from "./InputLabel.vue";
 
@@ -44,6 +44,10 @@ extend('between', {
   ...between,
   message: `{_field_} should be between {min} and {max}`
 })
+extend('email', {
+  ...email,
+  message: 'Input a valid email address'
+});
 
 export default defineComponent({
   props: {
@@ -62,7 +66,7 @@ export default defineComponent({
     });
 
     function safeId(field){
-      return field.label.replace(/\s+/g, "-");
+      return field.model.replace(/\s+/g, "-");
     }
 
     function bindAttrs(field) {
@@ -70,7 +74,7 @@ export default defineComponent({
     }
 
     function update(property, value) {
-      emit("change", {
+      emit("input", {
         [property]: value
       });
     }

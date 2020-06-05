@@ -61,7 +61,7 @@ export default {
   @apply border text-gray-700 bg-gray-200;
 }
 .btn-default:hover:enabled {
-  @apply text-blue-600;
+  @apply text-primary-700;
 }
 .btn-default:focus:enabled {
   @apply bg-gray-300 text-black;
