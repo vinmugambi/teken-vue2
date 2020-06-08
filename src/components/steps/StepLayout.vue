@@ -11,7 +11,7 @@
         <div>
           <slot name="content"></slot>
         </div>
-        <div class="pt-8">
+        <div>
           <slot name="navigation"></slot>
         </div>
       </div>

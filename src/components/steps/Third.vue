@@ -17,7 +17,7 @@
       <license :value="third.response.accept" @input="update($event)" />
     </template>
     <template v-slot:navigation>
-      <div class="flex justify-between flex-row-reverse">
+      <div class="flex justify-between pt-4 flex-row-reverse">
         <my-button
           :disabled="!isComplete"
           variant="primary"

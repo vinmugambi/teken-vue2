@@ -25,17 +25,12 @@
 <script>
 import { computed } from "@vue/composition-api";
 import { ValidationProvider as Validate, extend } from "vee-validate";
-import { required } from "vee-validate/dist/rules";
 
 import InputLabel from "./InputLabel.vue";
 
 extend("checked", {
   validate: value => value === "yes",
-  message: () => "You must accept the licence agreement"
-});
-extend("required", {
-  required,
-  message: "You must accept the licence agreement"
+  message: () => "Accept the licence agreement to continue"
 });
 export default {
   components: { InputLabel, Validate },

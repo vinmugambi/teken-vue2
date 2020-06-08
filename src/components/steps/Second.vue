@@ -15,27 +15,33 @@
       />
       <div v-if="isComplete && qualify">
         <span class="px-1 text-xs text-gray-700">visa summary</span>
-        <div
-          class="p-2  rounded bg-primary-100 bg-opacity-50 border border-primary-300"
-        >
+        <div class="p-2 border rounded">
           <div class="flex justify-between">
             <div class="text-lg h-8">
               <span> e-{{ formData.visaType }} visa </span>
             </div>
             <div class="flex items-center">USD {{ price }}</div>
           </div>
-          <div>
-            <span class="pr-2 text-xs uppercase tracking-tight text-gray-600">{{
+          <div class="flex justify-between flex-row-reverse text-xs text-gray-600">
+            <span class="text-xs uppercase font-light">{{
               getLabel(formData.duration)
             }}</span>
+            <div>
             <a
               href="#"
-              class="inline-block pr-2 z-10 text-gray-600 text-xs underline"
+              class="inline-block pr-2 z-10  underline"
               >details</a
             >
-            <a href="#" class="z-10 text-gray-600 text-xs underline"
+            <a href="#" class="z-10 underline"
               >pricing?</a
             >
+            </div>
+          </div>
+          <div class="pt-4 flex justify-between flex-row-reverse">
+            <my-button variant="primary" @click="$emit('next')"
+              >Continue</my-button
+            >
+            <my-button @click="$emit('back')">Back</my-button>
           </div>
         </div>
       </div>
@@ -43,14 +49,6 @@
 
     <template v-slot:navigation>
       <not-qualify v-if="!qualify" />
-      <div v-else class="py-4 flex justify-between flex-row-reverse">
-        <my-button
-          variant="primary"
-          @click="$emit('next')"
-          >Continue</my-button
-        >
-        <my-button @click="$emit('back')">Back</my-button>
-      </div>
     </template>
   </step-layout>
 </template>
