@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <h1 class="text-primary-700 text-center">Under development</h1>
+  <div class="flex justify-center items-center min-h-screen">
+      <router-link class="block" to="/visa">Under development</router-link>
   </div>
 </template>
