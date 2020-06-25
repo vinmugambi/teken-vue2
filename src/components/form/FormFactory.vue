@@ -1,7 +1,11 @@
 <template>
-  <form submit.prevent>
+  <div>
     <div class="py-2" v-for="field in fields" :key="field.model">
-      <Validate :rules="field.validation" v-slot="{ errors }" :name="field.label">
+      <Validate
+        :rules="field.validation"
+        v-slot="{ errors }"
+        :name="field.label"
+      >
         <div
           :class="
             errors.length > 0
@@ -9,9 +13,13 @@
               : ''
           "
         >
-          <input-label v-if="field.label" :label="field.label" :input-id="safeId(field)" />
+          <input-label
+            v-if="field.label"
+            :label="field.label"
+            :input-id="safeId(field)"
+          />
           <p v-if="field.help" class="text-xs text-gray-600">
-            {{field.help}}
+            {{ field.help }}
           </p>
           <component
             :is="field.component"
@@ -26,7 +34,7 @@
         </div>
       </Validate>
     </div>
-  </form>
+  </div>
 </template>
 
 <script lang="js">

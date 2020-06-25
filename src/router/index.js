@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../pages/index.vue";
 import Visa from "../pages/visa.vue";
+import Magic from "../pages/magic.vue";
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,7 @@ const routes = [
     name: "Visa",
     component: Visa,
   },
+  { path: "/magic", name: "magic", component: Magic },
 ];
 
 const router = new VueRouter({

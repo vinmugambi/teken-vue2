@@ -32,7 +32,7 @@ export default {
 
 <style lang="postcss">
 .btn {
-  @apply py-1 px-2 rounded;
+  @apply py-1 px-4 rounded;
 }
 .btn:disabled {
   @apply bg-opacity-50;

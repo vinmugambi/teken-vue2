@@ -5,7 +5,7 @@ const useApplication = {
     application.setItem(key, value);
   },
   get: (key) => {
-    application.getItem(key);
+    return application.getItem(key);
   },
 };
 

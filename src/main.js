@@ -8,6 +8,7 @@ import router from "./router/index";
 Vue.config.productionTip = false;
 Vue.use(CompositionApi);
 
+
 new Vue({
   router,
   render: (h) => h(App),

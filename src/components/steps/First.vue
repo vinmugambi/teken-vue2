@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div
         v-for="(tab, index) in tabs.tabList"
-        :key="tab.text+index"
+        :key="tab.text + index"
         :class="
           index === tabs.activeTabIndex
             ? 'bg-white border-primary-400 border-t-2'
@@ -21,29 +21,33 @@
     </template>
 
     <template v-slot:content>
-        <p class="py-2">To start a new application, click begin</p>
-        <my-button variant="primary" @click="$emit('next')">Begin</my-button>
+      <p class="py-2">To start a new application, click begin</p>
+      <my-button variant="primary" @click="$emit('next')">Begin</my-button>
     </template>
   </step-layout>
 </template>
 
 <script>
-import { reactive } from "@vue/composition-api";
+import { reactive, inject } from "@vue/composition-api";
 
 import StepLayout from "./StepLayout";
 
-import MyButton from '../navigation/Button.vue'
-
+import MyButton from "../navigation/Button.vue";
+// import feathers from '@feathersjs/feathers';
 
 export default {
-  components: {MyButton,StepLayout},
+  components: { MyButton, StepLayout },
   setup() {
     const tabs = reactive({
       tabList: [{ text: "Apply" }, { text: "Check status" }],
       activeTabIndex: 0
     });
+
+    const isLoggedIn = inject("isLoggedIn");
+
     return {
-      tabs
+      tabs,
+      isLoggedIn
     };
   }
 };
