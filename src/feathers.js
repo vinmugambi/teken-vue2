@@ -1,16 +1,18 @@
 import feathers from "@feathersjs/feathers";
-import socketio from "@feathersjs/socketio-client";
+// import socketio from "@feathersjs/socketio-client";
+import restClient from "@feathersjs/rest-client";
 import auth from "@feathersjs/authentication-client";
-import io from "socket.io-client";
-
+// import io from "socket.io-client";
 import { provide, inject } from "@vue/composition-api";
 
-const socket = io("http://localhost:3030", { transports: ["websocket"] });
+const rest= restClient("http://localhost:3030");
+
+// const socket = io("http://localhost:3030", { transports: ["websocket"] });
 
 const feathersClient = feathers()
-  .configure(socketio(socket))
+  // .configure(socketio(socket))
+  .configure(rest.fetch(window.fetch))
   .configure(auth({ storage: window.localStorage }));
-
 
 export const provideFeathers = () => {
   provide("feathers", feathersClient);

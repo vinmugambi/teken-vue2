@@ -48,9 +48,9 @@ import License from "../form/License.vue";
 const keys = ["passport", "duration", "nationality", "visaPurpose", "visaType"];
 const visa = () => {
   let choice = {};
-  useLocalStorage.get("passport");
+
   keys.forEach(key => {
-    visa[key] = useLocalStorage.get(key);
+    return (choice[key] = useLocalStorage.get(key));
   });
   return choice;
 };
@@ -85,24 +85,13 @@ export default {
 
       const authenticate = Feathers.service("authentication");
       try {
-        // const res=await fetch("http://localhost:3030/authentication", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json"
-        //   },
-        //   body: JSON.stringify({
-        //     action: "sendMagicLink",
-        //     email: third.response.email
-        //   })
-        // });
-        // console.log(res);
-        console.log(visa());
-        // await authenticate.create({
-        //   action: "sendMagicLink",
-        //   email: third.response.email,
-        //   type: "first",
-        //   visa
-        // });
+        let created= await authenticate.create({
+          action: "sendMagicLink",
+          email: third.response.email,
+          type: "first",
+          visa: visa()
+        });
+        console.log(created);
       } catch (error) {
         console.error(error);
       } finally {

@@ -1,11 +1,14 @@
 <template>
   <div class="max-w-sm mx-auto pt-16">
-    <h2>Login in you in ...</h2>
-    <pre>{{ authRequest }}</pre>
+    <h2 v-if="status.loading">Verifying ...</h2>
+    <div class="p-4 bg-red-100" v-if="status.error">
+      <h2 class="text-lg font-bold">{{status.error.title}}</h2>
+      {{ status.error.message }}
+    </div>
   </div>
 </template>
 <script>
-import { computed, onMounted } from "@vue/composition-api";
+import { computed, onMounted, reactive } from "@vue/composition-api";
 import { provideFeathers, Feathers } from "./../feathers";
 export default {
   setup(props, { root }) {
@@ -14,22 +17,40 @@ export default {
       let { acc, token } = root.$route.query;
       return { email: acc, magic: token, strategy: "link" };
     });
+    const status = reactive({
+      loading: null,
+      error: null
+    });
     const feathers = Feathers();
 
     onMounted(async () => {
-      try {
-        feathers.reAuthenticate();
-      } catch (error) {
-        feathers.authenticate(this.authRequest).catch(err => {
-          throw new Error(err);
+      status.loading = true;
+      const login = await feathers
+        .authenticate(authRequest.value)
+        .catch(err => {
+          switch (err.code) {
+            case 401:
+              status.error = {
+                message: "The link you clicked is expired or has bee clicked more than once. Please request a new one.",
+                title: "Link is invalid"
+              };
+              break;
+            default: {
+              status.error = {
+                message: "Unexpected server error. Please try again later",
+                title: "Server error"
+              };
+            }
+          }
+          console.log(err);
+          status.loading = false;
         });
-      } finally {
-        root.$router.push("/visa");
-      }
+      if (login) root.$router.push("/visa");
     });
 
     return {
-      authRequest
+      authRequest,
+      status
     };
   }
 };
