@@ -22,19 +22,15 @@
             </div>
             <div class="flex items-center">USD {{ price }}</div>
           </div>
-          <div class="flex justify-between flex-row-reverse text-xs text-gray-600">
+          <div
+            class="flex justify-between flex-row-reverse text-xs text-gray-600"
+          >
             <span class="text-xs uppercase font-light">{{
               getLabel(formData.duration)
             }}</span>
             <div>
-            <a
-              href="#"
-              class="inline-block pr-2 z-10  underline"
-              >details</a
-            >
-            <a href="#" class="z-10 underline"
-              >pricing?</a
-            >
+              <a href="#" class="inline-block pr-2 z-10  underline">details</a>
+              <a href="#" class="z-10 underline">pricing?</a>
             </div>
           </div>
           <div class="pt-4 flex justify-between flex-row-reverse">
@@ -91,6 +87,8 @@ const indexedSchema = () => {
 export default {
   components: { StepLayout, FormFactory, MyButton, NotQualify },
   setup() {
+    const isComplete = ref(false);
+    const qualify = ref(true);
     const formData = reactive({
       passport: null,
       nationality: null,
@@ -176,7 +174,6 @@ export default {
       schema.duration.choices = getDurations(value);
     }
 
-    const qualify = ref(true);
     function setQualify() {
       let p = formData.passport;
       let n = formData.nationality;
@@ -186,8 +183,6 @@ export default {
           eligibleNationalities.includes(n) ||
           schema.nationality.visible === false);
     }
-
-    const isComplete = ref(false);
 
     const price = ref(null);
 

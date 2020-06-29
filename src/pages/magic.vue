@@ -8,8 +8,8 @@
   </div>
 </template>
 <script>
-import { computed, onMounted, reactive } from "@vue/composition-api";
-import { provideFeathers, Feathers } from "./../feathers";
+import { computed, onMounted, reactive, inject } from "@vue/composition-api";
+import { provideFeathers } from "./../feathers";
 export default {
   setup(props, { root }) {
     provideFeathers();
@@ -21,7 +21,7 @@ export default {
       loading: null,
       error: null
     });
-    const feathers = Feathers();
+    const feathers = inject("feathers");
 
     onMounted(async () => {
       status.loading = true;

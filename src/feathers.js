@@ -3,7 +3,7 @@ import feathers from "@feathersjs/feathers";
 import restClient from "@feathersjs/rest-client";
 import auth from "@feathersjs/authentication-client";
 // import io from "socket.io-client";
-import { provide, inject } from "@vue/composition-api";
+import { provide} from "@vue/composition-api";
 
 const rest= restClient("http://localhost:3030");
 
@@ -17,11 +17,4 @@ const feathersClient = feathers()
 export const provideFeathers = () => {
   provide("feathers", feathersClient);
 };
-
-export const Feathers = () => {
-  let feathers = inject("feathers");
-  if (!feathers) {
-    throw new Error("Feathers was not provided");
-  }
-  return feathers;
-};
+export default feathersClient;

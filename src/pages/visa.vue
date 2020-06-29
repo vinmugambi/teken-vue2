@@ -21,8 +21,8 @@
 
 
 <script lang="js">
-import {ref, onMounted,provide,watchEffect} from '@vue/composition-api'
-import {provideFeathers, Feathers} from "../feathers.js";
+import {ref, onMounted,provide,watchEffect,inject} from '@vue/composition-api'
+import {provideFeathers} from "../feathers.js";
 
 import First from '../components/steps/First.vue'
 import Second from '../components/steps/Second.vue'
@@ -36,7 +36,6 @@ export default {
 
     function nextStep() {
         activeStep.value++
-        console.log(activeStep.value)
     }
     function previousStep() {
       activeStep.value--
@@ -44,7 +43,7 @@ export default {
 
     provideFeathers();
     const isLoggedIn = ref(null);
-    const feathers = Feathers();
+    const feathers = inject("feathers");
     onMounted(async () => {
       try {
         await feathers.reAuthenticate();
@@ -58,7 +57,7 @@ export default {
 
     watchEffect(()=> {
       if (isLoggedIn.value===true) {
-        activeStep.value= 3
+        activeStep.value= 3;
       }
     })
 
