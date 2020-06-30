@@ -17,4 +17,22 @@ const feathersClient = feathers()
 export const provideFeathers = () => {
   provide("feathers", feathersClient);
 };
+
+feathersClient.service("visa").hooks({
+  before: {
+    // find: [async context=>{
+    //   console.log(context.params)
+    // }]
+  },
+  after: {
+    // find: [async context => {
+
+    // }]
+  },
+  error: {all: [
+    async context => {
+      console.log(context.service.name, context.method, context.error);
+    }
+  ]}
+})
 export default feathersClient;

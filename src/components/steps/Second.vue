@@ -15,7 +15,7 @@
       />
       <div v-if="isComplete && qualify">
         <span class="px-1 text-xs text-gray-700">visa summary</span>
-        <div class="p-2 border rounded">
+        <div class="p-4 border rounded">
           <div class="flex justify-between">
             <div class="text-lg h-8">
               <span> e-{{ formData.visaType }} visa </span>
@@ -37,7 +37,7 @@
             <my-button variant="primary" @click="$emit('next')"
               >Continue</my-button
             >
-            <my-button @click="$emit('back')">Back</my-button>
+            <my-button @click.prevent="$emit('back')">Back</my-button>
           </div>
         </div>
       </div>

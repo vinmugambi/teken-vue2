@@ -1,5 +1,5 @@
 <template>
-  <div class="md:pb-16 pt-2 md:pt-8">
+  <div class="md:pb-16  md:pt-8">
     <first v-if="activeStep === 0" v-on:next="nextStep">{{ activeStep }}</first>
     <second v-if="activeStep === 1" v-on:next="nextStep">{{
       activeStep
