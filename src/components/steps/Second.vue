@@ -3,7 +3,7 @@
     <template v-slot:header></template>
     <template v-slot:title>
       <h2>Choose your visa type</h2>
-      <p class="px-1 text-gray-700">
+      <p>
         Complete this section to decide the apropriate visa type and its price
       </p>
     </template>

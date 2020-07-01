@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="py-2" v-for="field in fields" :key="field.model">
+  <div class="pt-2">
+    <div class="pb-1" v-for="field in fields" :key="field.model">
       <Validate
         :rules="field.validation"
         v-slot="{ errors }"

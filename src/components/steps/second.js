@@ -7,6 +7,8 @@ const nations = allNationalities.map((nation) => {
   return { value: nation.value, text: nation.country };
 });
 
+export const countries =nations;
+
 const visaTypes = [
   { text: "Tourist", value: "tourist" },
   { text: "Business", value: "business" },

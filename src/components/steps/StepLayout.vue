@@ -4,16 +4,16 @@
       <div class="flex">
         <slot name="header"></slot>
       </div>
-      <div class="px-4 pt-4 pb-4 text-sm">
+      <div class="px-4 pt-4  text-sm border-b border-purple-100 pb-2">
         <slot name="title"></slot>
       </div>
       <div>
         <slot name="full"></slot>
       </div>
-      <div class="p-4">
+      <div class="pt-0 pb-4 px-4">
         <slot name="content"></slot>
       </div>
-      <div class="p-4">
+      <div class="p-4 border-t border-purple-100">
         <slot name="navigation"></slot>
       </div>
     </div>
@@ -33,4 +33,7 @@ h4 {
 a{
   @apply underline;
 }
+p{
+  @apply text-gray-700;
+};
 </style>
