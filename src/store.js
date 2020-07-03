@@ -61,6 +61,7 @@ const store = new Vuex.Store({
     current: null,
     applications: null,
     error: null,
+    step: null,
   },
   mutations: mutations,
   actions: actions,
