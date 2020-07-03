@@ -25,7 +25,7 @@
               {{ visa.visaType }} visa
             </div>
             <div class="text-xs text-gray-600 leading-tight">
-              <span v-if="visa._id === current._id" class="inline-block h-2 w-2 mr-1 rounded-full bg-green-500"></span>
+              <span v-if="current && visa._id === current._id" class="inline-block h-2 w-2 mr-1 rounded-full bg-green-500"></span>
               <span>
                 Started 5 hours ago
               </span>

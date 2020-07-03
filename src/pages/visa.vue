@@ -40,7 +40,7 @@ export default {
   components: {First, Second, Third, Fourth, Fifth},
   setup(props, {root}) {
     const Store=root.$store;
-    let initialStep = ref(0);
+    const initialStep = ref(0);
 
     const activeStep = computed({
       get: () =>{
@@ -57,12 +57,10 @@ export default {
 
     function nextStep() {
       if(steps.includes(activeStep.value+1)){
-        initialStep = null;
         activeStep.value++}
     }
     function previousStep() {
             if(steps.includes(activeStep.value-1)) {
-              initialStep= null;
               activeStep.value--
       }
     }

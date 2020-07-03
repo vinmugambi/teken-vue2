@@ -1,10 +1,11 @@
 import SelectBox from "../form/SelectBox.vue";
 import RadioInput from "../form/RadioInput.vue";
 import TextInput from "../form/TextInput.vue";
+import FileInput from "../form/FileInput.vue";
 import { countries } from "./second";
 
 export const india = {
-  steps: [0, 1, 2, 3, 4, 5],
+  steps: [0, 1, 2, 3, 4, 5,6],
   0: {
     showing: [0, 1, 2, 3],
     title: "Personal information",
@@ -272,6 +273,20 @@ export const india = {
         label: "Phone number of local reference",
         component: TextInput,
         validation: "required",
+      },
+    },
+  },
+  6: {
+    title: "Passport image",
+    description:
+      "Upload an image showing your the front of your face and shoulders against a one colour background (eg a wall)",
+    questions: {
+      passportImage: {
+        index: 0,
+        label: "Upload passport image",
+        component: FileInput,
+        validation: "required",
+        attrs: {accept: ".jpg,.jpeg,.png"}
       },
     },
   },
