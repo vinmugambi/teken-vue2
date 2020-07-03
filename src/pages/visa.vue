@@ -21,7 +21,7 @@
 
 
 <script lang="js">
-import {ref, onMounted,provide,watchEffect,inject} from '@vue/composition-api'
+import {ref, onBeforeMount,provide,watchEffect,inject} from '@vue/composition-api'
 import {provideFeathers} from "../feathers.js";
 
 import First from '../components/steps/First.vue'
@@ -31,7 +31,7 @@ import Fourth from '../components/steps/Fourth.vue'
 
 export default {
   components: {First, Second, Third, Fourth},
-  setup() {
+  setup(props, {root}) {
     const activeStep = ref(0);
 
     function nextStep() {
@@ -44,10 +44,11 @@ export default {
     provideFeathers();
     const isLoggedIn = ref(null);
     const feathers = inject("feathers");
-    onMounted(async () => {
+    onBeforeMount(async () => {
       try {
         await feathers.reAuthenticate();
         isLoggedIn.value = true;
+        root.$store.dispatch("initialise");
       } catch (error) {
         isLoggedIn.value = false;
       }
@@ -55,9 +56,11 @@ export default {
 
     provide("isLoggedIn", isLoggedIn);
 
+
     watchEffect(()=> {
-      if (isLoggedIn.value===true) {
-        activeStep.value= 3;
+      const State=root.$store.state
+      if (isLoggedIn.value){
+        activeStep.value= State.applications && !(State.applications.length===0 && !State.current)?3:0;
       }
     })
 

@@ -13,7 +13,7 @@
       <div class="pt-0 pb-4 px-4">
         <slot name="content"></slot>
       </div>
-      <div class="p-4 border-t border-purple-100">
+      <div>
         <slot name="navigation"></slot>
       </div>
     </div>

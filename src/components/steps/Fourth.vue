@@ -10,13 +10,13 @@
         <h4 class="pt-2">Select the one you wish to continue with</h4>
       </div>
       <div v-else>
-        <h2>{{ questions.current.name }}</h2>
+        <h2>{{ questions.title }}</h2>
       </div>
     </template>
     <template v-slot:full>
       <ul v-if="applications && !current">
         <li
-          class="flex flex-no-wrap justify-between py-2 px-4 border-b border-purple-100 hover:bg-purple-100"
+          class="flex flex-no-wrap justify-between py-2 px-4 cursor-pointer border-b border-purple-100 hover:bg-purple-100"
           v-for="visa in applications"
           :key="visa._id"
           @click="setCurrent(visa)"
@@ -55,26 +55,23 @@
         <form-factory
           :value="current"
           @input="update($event)"
-          :schema="questions.current.questions"
+          :schema="questions.questions"
         ></form-factory>
       </div>
     </template>
     <template v-slot:navigation>
       <div class="flex justify-between flex-row-reverse">
-        <my-button variant="primary" @click="nextStep">Next</my-button>
-        <my-button @click="backStep">Back</my-button>
+        <my-button variant="primary" @click="nextStep">{{
+          isLastStep ? "submit" : "Next"
+        }}</my-button>
+        <my-button @click="backStep">Previous</my-button>
       </div>
     </template>
   </step-layout>
 </template>
 
 <script>
-import {
-  computed,
-  onBeforeMount,
-  watchEffect,
-  reactive
-} from "@vue/composition-api";
+import { computed, ref, watchEffect } from "@vue/composition-api";
 import StepLayout from "./StepLayout.vue";
 import { india } from "./fourth.js";
 import FormFactory from "../form/FormFactory.vue";
@@ -89,7 +86,7 @@ export default {
     const total = computed(() => Store.state.totalApplications);
     const currentStep = computed({
       get: () => {
-        if (!Store.state.current.currentStep) {
+        if (!Store.state.current || !Store.state.current.currentStep) {
           return india.steps[0];
         } else return Store.state.current.currentStep;
       },
@@ -98,20 +95,27 @@ export default {
       }
     });
 
-    const questions = reactive({ current: {} });
-    watchEffect(() => (questions.current = india[currentStep.value]));
+    const questions = computed(() => india[currentStep.value]);
+    const isLastStep = ref(false);
+    const currentIndex = computed(() => india.steps.indexOf(currentStep.value));
+    watchEffect(() => {
+      if (currentIndex.value < india.steps.length - 1) {
+        isLastStep.value = false;
+      } else {
+        isLastStep.value = true;
+      }
+    });
 
     function nextStep() {
-      if (india.steps.includes(currentStep.value + 1)) {
-        currentStep.value = currentStep.value + 1;
+      if (!isLastStep.value) {
+        currentStep.value = india.steps[currentIndex.value + 1];
       }
-      console.log(currentStep.value);
     }
     function backStep() {
-      if (currentStep.value === 0) {
+      if (currentStep.value === india.steps[0]) {
         emit("back");
       } else {
-        currentStep.value = currentStep.value - 1;
+        currentStep.value = india.steps[currentIndex.value - 1];
       }
     }
     function setCurrent(visa) {
@@ -123,7 +127,6 @@ export default {
     function update(field) {
       Store.commit("input", field);
     }
-    onBeforeMount(async () => Store.dispatch("initialise"));
     return {
       applications,
       setCurrent,
@@ -134,7 +137,8 @@ export default {
       update,
       nextStep,
       backStep,
-      currentStep
+      currentStep,
+      isLastStep
     };
   }
 };

@@ -42,7 +42,6 @@
         </div>
       </div>
     </template>
-
     <template v-slot:navigation>
       <not-qualify v-if="!qualify" />
     </template>
