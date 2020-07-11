@@ -3,9 +3,9 @@ import feathers from "@feathersjs/feathers";
 import restClient from "@feathersjs/rest-client";
 import auth from "@feathersjs/authentication-client";
 // import io from "socket.io-client";
-import { provide} from "@vue/composition-api";
+import { provide } from "@vue/composition-api";
 
-const rest= restClient("http://localhost:3030");
+const rest = restClient(process.env.VUE_APP_API_URL);
 
 // const socket = io("http://localhost:3030", { transports: ["websocket"] });
 
@@ -19,20 +19,14 @@ export const provideFeathers = () => {
 };
 
 feathersClient.service("visa").hooks({
-  before: {
-    // find: [async context=>{
-    //   console.log(context.params)
-    // }]
+  before: {},
+  after: {},
+  error: {
+    all: [
+      async (context) => {
+        console.error(context.service.name, context.method, context.error);
+      },
+    ],
   },
-  after: {
-    // find: [async context => {
-
-    // }]
-  },
-  error: {all: [
-    async context => {
-      console.log(context.service.name, context.method, context.error);
-    }
-  ]}
-})
+});
 export default feathersClient;

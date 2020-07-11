@@ -1,45 +1,84 @@
 <template>
-  <div class="py-4">
-    <div class="h-auto w-full mb-4 bg-purple-200">
-      <img :src="url" alt="" />
+  <div class="pt-2">
+    <div class="h-auto w-full pb-2">
+      <img :src="url" class="border" alt="" />
     </div>
+    <label
+      for="upload-image"
+      class="inline-block px-2 py-1 bg-primary-800 cursor-pointer rounded text-white font-bold"
+      >{{ url ? "change image" : "upload image" }}</label
+    >
     <input
       type="file"
       ref="upload"
-      :class="error ? 'border border-red-300' : 'border'"
+      class="block opacity-0 h-0"
+      id="upload-image"
       @change="handleUpload"
     />
+    <div
+      v-if="errors.message"
+      content-center
+      class="bg-red-100 p-2 mt-2 text-red-800"
+    >
+      <strong>Error </strong> <span>{{ errors.message }}</span>
+    </div>
   </div>
 </template>
 
 
 <script>
-import { computed, ref, watchEffect } from "@vue/composition-api";
+import { ref, reactive, computed } from "@vue/composition-api";
 export default {
   props: {
     value: {
       default: () => "",
-      type: String
-    },
-    error: {
-      type: Boolean,
-      default: () => false
+      type: String || Object
     }
   },
-  setup(props, { emit }) {
+  setup(props, { emit, root }) {
     const upload = ref(null);
-    const url= ref(null)
+    const application = computed(() => root.$store.state.current._id);
+    const url = ref(null);
+    const errors = reactive({
+      code: null,
+      message: null
+    });
 
-    function handleUpload(event) {
-        console.log(upload.value.files[0]);
-        url.value=URL.createObjectURL(upload.value.files[0]);
-      emit("input", event.target.value);
+    async function handleUpload() {
+      url.value = URL.createObjectURL(upload.value.files[0]);
+      const image = new FormData();
+      image.append("file", upload.value.files[0]);
+      image.append("application", application.value);
+      fetch("http://127.0.0.1:3030/files", {
+        method: "POST",
+        body: image,
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem("feathers-jwt")}`
+        }
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          if (data.errors) {
+            errors.code = data.code;
+            errors.message = data.message;
+            throw new Error(data.message);
+          } else {
+            emit("input", data.path);
+          }
+        })
+        .catch(err => {
+          errors.message = err;
+          throw new Error(err);
+        });
     }
 
     return {
       upload,
       handleUpload,
-      url
+      url,
+      errors
     };
   }
 };

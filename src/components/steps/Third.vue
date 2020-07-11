@@ -120,7 +120,6 @@ export default {
         await authenticate.create({
           action: "sendMagicLink",
           email: third.response.email,
-          type: "first",
           visa: visa()
         });
         third.success = true;
@@ -146,14 +145,5 @@ const SCHEMA = {
     label: "Email address",
     validation: "required|email"
   }
-  // accept: {
-  //   component: CheckBox,
-  //   label: "Licence agreement",
-  //   validation: "required",
-  //   help: "I have read the <a href='#'>End-user licence agreement</a>  and Privacy policy",
-  //   choices: [
-  //     { text: "I accept licence agreement and privacy policy", value: true }
-  //   ]
-  // }
 };
 </script>

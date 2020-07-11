@@ -1,6 +1,12 @@
 <template>
   <div class="md:pb-16  md:pt-8">
-    <first v-if="activeStep === 0" v-on:next="nextStep">{{ activeStep }}</first>
+    <first
+      v-if="activeStep === 0"
+      v-on:next="nextStep"
+      v-on:resume="resumeApplication"
+      >{{ activeStep }}</first
+    >
+
     <second v-if="activeStep === 1" v-on:next="nextStep">{{
       activeStep
     }}</second>
@@ -25,9 +31,8 @@
   </div>
 </template>
 
-
 <script lang="js">
-import {ref, onBeforeMount,provide,watchEffect,inject, computed} from '@vue/composition-api'
+import {ref, onBeforeMount,watchEffect,inject, computed} from '@vue/composition-api'
 import {provideFeathers} from "../feathers.js";
 
 import First from '../components/steps/First.vue'
@@ -37,10 +42,10 @@ import Fourth from '../components/steps/Fourth.vue'
 import Fifth from '../components/steps/Fifth.vue'
 
 export default {
-  components: {First, Second, Third, Fourth, Fifth},
+  components: {First,Second, Third, Fourth, Fifth},
   setup(props, {root}) {
     const Store=root.$store;
-    const initialStep = ref(0);
+    const initialStep = ref(null);
 
     const activeStep = computed({
       get: () =>{
@@ -53,45 +58,65 @@ export default {
       }
     });
 
-    const steps = [0,1,2,3,4];
+    const steps = ref([0,1,2,3,4]);
+    const activeStepIndex=computed(() =>steps.value.indexOf(activeStep.value));
+    const isLastStep = ref(false);
+
+    watchEffect(() => {
+      if (activeStepIndex.value < steps.value.length - 1) {
+        isLastStep.value = false;
+      } else {
+        isLastStep.value = true;
+      }
+    });
+
 
     function nextStep() {
-      if(steps.includes(activeStep.value+1)){
-        activeStep.value++}
-    }
-    function previousStep() {
-            if(steps.includes(activeStep.value-1)) {
-              activeStep.value--
+      if(!isLastStep.value){
+        activeStep.value = steps.value[activeStepIndex.value + 1];
       }
     }
 
+    function previousStep() {
+      if(activeStepIndex.value>0){
+       activeStep.value = steps.value[activeStepIndex.value -1];
+      }
+    }
+
+    function resumeApplication(){
+      activeStep.value=2;
+    }
+
     provideFeathers();
-    const isLoggedIn = ref(null);
+    const userHasApplications=computed(()=> Store.getters.userHasApplications)
     const feathers = inject("feathers");
     onBeforeMount(async () => {
       try {
         await feathers.reAuthenticate();
-        isLoggedIn.value = true;
-        root.$store.dispatch("initialise");
+        Store.commit("patch", {loggedIn: true})
+        await  Store.dispatch("initialise");
+        if(userHasApplications.value){
+          initialStep.value= 3
+        }else {
+          initialStep.value= 0
+        }
       } catch (error) {
-        isLoggedIn.value = false;
+        Store.commit("patch", {loggedIn: false})
+        initialStep.value=0;
       }
     });
 
-    provide("isLoggedIn", isLoggedIn);
-
-    watchEffect(()=> {
-      const State= Store.state;
-      if (isLoggedIn.value){
-        initialStep.value = State.applications && !(State.applications.length===0 && !State.current)?3:0;
-      }
-    })
 
     return {
       nextStep,
       activeStep,
       previousStep,
-      isLoggedIn
+      steps,
+      initialStep,
+      activeStepIndex,
+      isLastStep,
+      resumeApplication,
+      userHasApplications
     }
   }
 }

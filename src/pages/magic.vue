@@ -2,7 +2,7 @@
   <div class="max-w-sm mx-auto pt-16">
     <h2 v-if="status.loading">Verifying ...</h2>
     <div class="p-4 bg-red-100" v-if="status.error">
-      <h2 class="text-lg font-bold">{{status.error.title}}</h2>
+      <h2 class="text-lg font-bold">{{ status.error.title }}</h2>
       {{ status.error.message }}
     </div>
   </div>
@@ -31,7 +31,8 @@ export default {
           switch (err.code) {
             case 401:
               status.error = {
-                message: "The link you clicked is expired or has bee clicked more than once. Please request a new one.",
+                message:
+                  "The link you clicked is expired or has bee clicked more than once. Please request a new one.",
                 title: "Link is invalid"
               };
               break;

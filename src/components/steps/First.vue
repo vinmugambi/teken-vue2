@@ -21,14 +21,18 @@
     </template>
 
     <template v-slot:content>
-      <p class="py-2">To start a new application, click begin</p>
+      <p class="py-2">
+        To start a new application, click begin. <br />
+        If you had started an application and did not complete it click resume.
+      </p>
       <my-button variant="primary" @click="$emit('next')">Begin</my-button>
+      <my-button class="ml-2" @click="$emit('resume')">Resume </my-button>
     </template>
   </step-layout>
 </template>
 
 <script>
-import { reactive, inject } from "@vue/composition-api";
+import { reactive } from "@vue/composition-api";
 
 import StepLayout from "./StepLayout";
 
@@ -43,11 +47,8 @@ export default {
       activeTabIndex: 0
     });
 
-    const isLoggedIn = inject("isLoggedIn");
-
     return {
-      tabs,
-      isLoggedIn
+      tabs
     };
   }
 };
