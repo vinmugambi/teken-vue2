@@ -1,7 +1,10 @@
 <template>
-  <div class="pt-2">
+  <div class="pt-1">
     <div class="h-auto w-full pb-2">
-      <img :src="url" class="border" alt="" />
+      <img v-if="url && !isPdf" :src="url" class="border" alt="" />
+      <canvas v-if="isPdf" id="pdf-preview" ref="pdf">
+        pdf file
+      </canvas>
     </div>
     <label
       for="upload-image"
@@ -13,6 +16,7 @@
       ref="upload"
       class="block opacity-0 h-0"
       id="upload-image"
+      accept=".jpg,.png,.pdf,.jpg"
       @change="handleUpload"
     />
     <div
@@ -27,7 +31,7 @@
 
 
 <script>
-import { ref, reactive, computed } from "@vue/composition-api";
+import { ref, reactive, computed, watchEffect } from "@vue/composition-api";
 export default {
   props: {
     value: {
@@ -37,19 +41,30 @@ export default {
   },
   setup(props, { emit, root }) {
     const upload = ref(null);
+    const pdf = ref(false);
+
     const application = computed(() => root.$store.state.current._id);
-    const url = ref(null);
+    const url = computed({
+      get() {
+        return root.$store.state.current.passportImage || null;
+      },
+      set(value) {
+        emit("input", value);
+      }
+    });
     const errors = reactive({
       code: null,
       message: null
     });
 
-    async function handleUpload() {
-      url.value = URL.createObjectURL(upload.value.files[0]);
+    const isPdf = ref(null);
+
+    async function uploadToServer(file) {
       const image = new FormData();
-      image.append("file", upload.value.files[0]);
+      image.append("file", file);
       image.append("application", application.value);
-      fetch("http://127.0.0.1:3030/files", {
+      let server = process.env.VUE_APP_API_URL;
+      fetch(server + "/files", {
         method: "POST",
         body: image,
         headers: {
@@ -65,7 +80,7 @@ export default {
             errors.message = data.message;
             throw new Error(data.message);
           } else {
-            emit("input", data.path);
+            url.value = server + "/uploads/" + data.filename;
           }
         })
         .catch(err => {
@@ -74,11 +89,50 @@ export default {
         });
     }
 
+    async function handleUpload() {
+      errors.message = null;
+      const file = upload.value.files[0];
+
+      if (
+        ["image/jpeg", "image/jpg", "image/png", "application/pdf"].includes(
+          file.type
+        )
+      ) {
+        url.value = URL.createObjectURL(file);
+        if (file.type === "application/pdf") {
+          isPdf.value = true;
+          const loadingTask = pdfjsLib.getDocument(url.value);
+          loadingTask.promise.then(pdfFile => {
+            pdfFile.getPage(1).then(page => {
+              console.log(page);
+              let viewport = page.getViewport({ scale: 0.7 });
+
+              let ctx = pdf.value.getContext("2d");
+              pdf.value.height = viewport.height;
+              pdf.value.width = viewport.width;
+
+              let renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+              };
+
+              page.render(renderContext);
+            });
+          });
+        }
+        uploadToServer(file);
+      } else {
+        errors.message = "Only still images and pdf allowed";
+      }
+    }
+
     return {
       upload,
       handleUpload,
       url,
-      errors
+      errors,
+      pdf,
+      isPdf
     };
   }
 };

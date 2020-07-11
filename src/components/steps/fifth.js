@@ -5,7 +5,7 @@ import FileInput from "../form/FileInput.vue";
 import { countries } from "./second";
 
 export const india = {
-  steps: [6, 1, 2, 3, 4, 5,0],
+  steps: [7,6, 1, 2, 3, 4, 5,0],
   0: {
     showing: [0, 1, 2, 3],
     title: "Personal information",
@@ -285,7 +285,18 @@ export const india = {
         index: 0,
         component: FileInput,
         validation: "required",
-        attrs: {accept: ".jpg,.jpeg,.png"}
+      },
+    },
+  },
+  7: {
+    title: "Scan or image of passport/travelling document",
+    description:
+      "Upload an image/scan of the page containing your registration information such as name, date of birth, photograph, date of issue",
+    questions: {
+      passportImage: {
+        index: 0,
+        component: FileInput,
+        validation: "required"
       },
     },
   },
