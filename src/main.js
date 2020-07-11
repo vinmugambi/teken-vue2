@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import store from "./store.js"
+import store from "./store.js";
 import CompositionApi from "@vue/composition-api";
 
 import App from "./pages/layouts/default.vue";

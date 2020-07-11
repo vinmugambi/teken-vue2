@@ -32,14 +32,14 @@
 </template>
 
 <script lang="js">
-import {ref, onBeforeMount,watchEffect,inject, computed} from '@vue/composition-api'
+import {ref, onBeforeMount,watchEffect,inject, computed} from "@vue/composition-api";
 import {provideFeathers} from "../feathers.js";
 
-import First from '../components/steps/First.vue'
-import Second from '../components/steps/Second.vue'
-import Third from '../components/steps/Third.vue'
-import Fourth from '../components/steps/Fourth.vue'
-import Fifth from '../components/steps/Fifth.vue'
+import First from "../components/steps/First.vue";
+import Second from "../components/steps/Second.vue";
+import Third from "../components/steps/Third.vue";
+import Fourth from "../components/steps/Fourth.vue";
+import Fifth from "../components/steps/Fifth.vue";
 
 export default {
   components: {First,Second, Third, Fourth, Fifth},
@@ -50,11 +50,11 @@ export default {
     const activeStep = computed({
       get: () =>{
         if (Store.state.step){
-        return Store.state.step;}
+          return Store.state.step;}
         else return initialStep.value;
       },
       set: value => {
-        Store.commit("patch", {step: value})
+        Store.commit("patch", {step: value});
       }
     });
 
@@ -79,7 +79,7 @@ export default {
 
     function previousStep() {
       if(activeStepIndex.value>0){
-       activeStep.value = steps.value[activeStepIndex.value -1];
+        activeStep.value = steps.value[activeStepIndex.value -1];
       }
     }
 
@@ -88,20 +88,20 @@ export default {
     }
 
     provideFeathers();
-    const userHasApplications=computed(()=> Store.getters.userHasApplications)
+    const userHasApplications=computed(()=> Store.getters.userHasApplications);
     const feathers = inject("feathers");
     onBeforeMount(async () => {
       try {
         await feathers.reAuthenticate();
-        Store.commit("patch", {loggedIn: true})
+        Store.commit("patch", {loggedIn: true});
         await  Store.dispatch("initialise");
         if(userHasApplications.value){
-          initialStep.value= 3
+          initialStep.value= 3;
         }else {
-          initialStep.value= 0
+          initialStep.value= 0;
         }
       } catch (error) {
-        Store.commit("patch", {loggedIn: false})
+        Store.commit("patch", {loggedIn: false});
         initialStep.value=0;
       }
     });
@@ -117,7 +117,7 @@ export default {
       isLastStep,
       resumeApplication,
       userHasApplications
-    }
+    };
   }
-}
+};
 </script>

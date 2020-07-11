@@ -29,19 +29,19 @@ export default {
         .authenticate(authRequest.value)
         .catch(err => {
           switch (err.code) {
-            case 401:
-              status.error = {
-                message:
+          case 401:
+            status.error = {
+              message:
                   "The link you clicked is expired or has bee clicked more than once. Please request a new one.",
-                title: "Link is invalid"
-              };
-              break;
-            default: {
-              status.error = {
-                message: "Unexpected server error. Please try again later",
-                title: "Server error"
-              };
-            }
+              title: "Link is invalid"
+            };
+            break;
+          default: {
+            status.error = {
+              message: "Unexpected server error. Please try again later",
+              title: "Server error"
+            };
+          }
           }
           console.log(err);
           status.loading = false;
