@@ -17,7 +17,7 @@
     <template v-slot:navigation>
       <div class="flex justify-between flex-row-reverse">
         <my-button variant="primary" @click="nextStep">{{
-          isLastStep ? "submit" : "Next"
+          isLastStep ? "Verify" : "Next"
         }}</my-button>
         <my-button @click="backStep">Previous</my-button>
       </div>
@@ -51,6 +51,7 @@ export default {
     const questions = computed(() => india[currentStep.value]);
     const isLastStep = ref(false);
     const currentIndex = computed(() => india.steps.indexOf(currentStep.value));
+
     watchEffect(() => {
       if (currentIndex.value < india.steps.length - 1) {
         isLastStep.value = false;
@@ -62,6 +63,8 @@ export default {
     function nextStep() {
       if (!isLastStep.value) {
         currentStep.value = india.steps[currentIndex.value + 1];
+      }else {
+        emit("next");
       }
     }
     function backStep() {

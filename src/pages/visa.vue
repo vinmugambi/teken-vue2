@@ -4,30 +4,29 @@
       v-if="activeStep === 0"
       v-on:next="nextStep"
       v-on:resume="resumeApplication"
-      >{{ activeStep }}</first
-    >
+    ></first>
 
-    <second v-if="activeStep === 1" v-on:next="nextStep">{{
-      activeStep
-    }}</second>
+    <second v-if="activeStep === 1" v-on:next="nextStep"></second>
     <third
       v-if="activeStep === 2"
       v-on:back="previousStep"
       v-on:next="nextStep"
-      >{{ activeStep }}</third
-    >
+    ></third>
     <fourth
       v-if="activeStep === 3"
       v-on:back="previousStep"
       v-on:next="nextStep"
-      >{{ activeStep }}</fourth
-    >
+    ></fourth>
     <fifth
       v-if="activeStep === 4"
       v-on:back="previousStep"
       v-on:next="nextStep"
-      >{{ activeStep }}</fifth
-    >
+    ></fifth>
+    <sixth
+      v-if="activeStep === 5"
+      v-on:back="previousStep"
+      v-on:next="nextStep"
+    ></sixth>
   </div>
 </template>
 
@@ -40,9 +39,10 @@ import Second from "../components/steps/Second.vue";
 import Third from "../components/steps/Third.vue";
 import Fourth from "../components/steps/Fourth.vue";
 import Fifth from "../components/steps/Fifth.vue";
+import Sixth from "../components/steps/Sixth.vue";
 
 export default {
-  components: {First,Second, Third, Fourth, Fifth},
+  components: {First,Second, Third, Fourth, Fifth, Sixth},
   setup(props, {root}) {
     const Store=root.$store;
     const initialStep = ref(null);
@@ -58,7 +58,7 @@ export default {
       }
     });
 
-    const steps = ref([0,1,2,3,4]);
+    const steps = ref([0,1,2,3,4,5]);
     const activeStepIndex=computed(() =>steps.value.indexOf(activeStep.value));
     const isLastStep = ref(false);
 
@@ -95,10 +95,11 @@ export default {
         await feathers.reAuthenticate();
         Store.commit("patch", {loggedIn: true});
         await  Store.dispatch("initialise");
+        steps.value=steps.value.filter(step=>step!=0&&step!=2);
         if(userHasApplications.value){
           initialStep.value= 3;
         }else {
-          initialStep.value= 0;
+          initialStep.value= 1;
         }
       } catch (error) {
         Store.commit("patch", {loggedIn: false});

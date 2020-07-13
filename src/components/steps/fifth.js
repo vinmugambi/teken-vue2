@@ -5,8 +5,8 @@ import FileInput from "../form/FileInput.vue";
 import { countries } from "./second";
 
 export const india = {
-  steps: [7,6, 1, 2, 3, 4, 5,0],
-  0: {
+  steps: [9,8,7,6,1, 2, 3, 4, 5],
+  1: {
     showing: [0, 1, 2, 3],
     title: "Personal information",
     description:
@@ -51,7 +51,7 @@ export const india = {
       },
     },
   },
-  1: {
+  2: {
     title: "Contact information",
     id: 1,
     showing: [0, 1, 2],
@@ -78,7 +78,7 @@ export const india = {
       },
     },
   },
-  2: {
+  3: {
     title: "Family information",
     showing: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     id: 2,
@@ -188,7 +188,7 @@ export const india = {
       },
     },
   },
-  3: {
+  4: {
     title: "Work information",
     id: 3,
     showing: [0, 1, 2, 3],
@@ -223,7 +223,7 @@ export const india = {
       },
     },
   },
-  4: {
+  5: {
     title: "Travel information",
     id: 4,
     showing: [0, 1, 2],
@@ -249,8 +249,9 @@ export const india = {
       },
     },
   },
-  5: {
+  6: {
     title: "References",
+    showing:  [0, 1, 2],
     description:
       "Information about people or organisations who know you and are aware of your travel to India",
     questions: {
@@ -276,25 +277,43 @@ export const india = {
       },
     },
   },
-  6: {
+  7: {
     title: "Passport image",
+    showing:  [1],
+    media: true,
     description:
       "Upload an image showing your the front of your face and shoulders against a one colour background (eg a wall)",
     questions: {
       passportImage: {
-        index: 0,
+        index: 1,
         component: FileInput,
         validation: "required",
       },
     },
   },
-  7: {
-    title: "Scan or image of passport/travelling document",
+  8: {
+    title: "Passport/travelling document",
+    showing:  [1],
+    media: true,
     description:
       "Upload an image/scan of the page containing your registration information such as name, date of birth, photograph, date of issue",
     questions: {
-      passportImage: {
-        index: 0,
+      passportCopy: {
+        index: 1,
+        component: FileInput,
+        validation: "required"
+      },
+    },
+  },
+  9: {
+    title: "Invitation Letter",
+    showing:  [1],
+    media: true,
+    description:
+      "Upload a clear scan of an invitation letter from the person/organisation hosting you in india",
+    questions: {
+      supportLetter: {
+        index: 1,
         component: FileInput,
         validation: "required"
       },

@@ -1,15 +1,15 @@
 <template>
   <div class="pt-1">
     <div class="h-auto w-full pb-2">
-      <img v-if="url && !isPdf" :src="url" class="border" alt="" />
-      <canvas v-if="isPdf" id="pdf-preview" ref="pdf">
-        pdf file
-      </canvas>
+      <img v-if="url && !uploading" :src="url" class="border" alt="" />
+      <div v-if="uploading" class="p-4">
+        uploading
+      </div>
     </div>
     <label
       for="upload-image"
       class="inline-block px-2 py-1 bg-primary-800 cursor-pointer rounded text-white font-bold"
-      >{{ url ? "change image" : "upload image" }}</label
+      >{{ url && !uploading? "change" : "upload" }}</label
     >
     <input
       type="file"
@@ -31,7 +31,7 @@
 
 
 <script>
-import { ref, reactive, computed, watchEffect } from "@vue/composition-api";
+import { ref, reactive, computed } from "@vue/composition-api";
 export default {
   props: {
     value: {
@@ -39,14 +39,15 @@ export default {
       type: String || Object
     }
   },
-  setup(props, { emit, root }) {
+  setup(props, { emit, root, attrs}) {
     const upload = ref(null);
     const pdf = ref(false);
+    const uploading = ref(null);
 
     const application = computed(() => root.$store.state.current._id);
     const url = computed({
       get() {
-        return root.$store.state.current.passportImage || null;
+        return root.$store.state.current[attrs.name] || null;
       },
       set(value) {
         emit("input", value);
@@ -80,7 +81,17 @@ export default {
             errors.message = data.message;
             throw new Error(data.message);
           } else {
-            url.value = server + "/uploads/" + data.filename;
+            if (!isPdf.value) {
+              url.value = server + "/uploads/" + data.filename;
+            } else {
+              url.value =
+                server +
+                "/uploads/" +
+                data.filename.substring(0, data.filename.length - 4) +
+                "-0.png";
+              isPdf.value = false;
+              uploading.value = false;
+            }
           }
         })
         .catch(err => {
@@ -101,24 +112,9 @@ export default {
         url.value = URL.createObjectURL(file);
         if (file.type === "application/pdf") {
           isPdf.value = true;
-          const loadingTask = pdfjsLib.getDocument(url.value);
-          loadingTask.promise.then(pdfFile => {
-            pdfFile.getPage(1).then(page => {
-              console.log(page);
-              let viewport = page.getViewport({ scale: 0.7 });
-
-              let ctx = pdf.value.getContext("2d");
-              pdf.value.height = viewport.height;
-              pdf.value.width = viewport.width;
-
-              let renderContext = {
-                canvasContext: ctx,
-                viewport: viewport
-              };
-
-              page.render(renderContext);
-            });
-          });
+          uploading.value = true;
+        } else {
+          isPdf.value = false;
         }
         uploadToServer(file);
       } else {
@@ -132,7 +128,8 @@ export default {
       url,
       errors,
       pdf,
-      isPdf
+      isPdf,
+      uploading
     };
   }
 };
