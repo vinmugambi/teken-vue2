@@ -30,9 +30,6 @@ h2 {
 h4 {
   @apply font-bold;
 }
-a{
-  @apply underline;
-}
 p{
   @apply text-gray-700;
 };

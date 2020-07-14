@@ -64,7 +64,7 @@ export default {
     const current = computed(() => Store.state.current);
     const total = computed(() => Store.state.totalApplications);
     function setCurrent(visa) {
-      emit('next');
+      emit("next");
       Store.commit("patch", { current: visa });
     }
     function discard(id) {

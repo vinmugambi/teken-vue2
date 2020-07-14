@@ -75,7 +75,7 @@ export default {
       }
     }
     function update(field) {
-      Store.commit("input", field);
+      Store.dispatch("update", field);
     }
     return {
       current,

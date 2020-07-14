@@ -269,7 +269,7 @@ export const india = {
         component: TextInput,
         validation: "required",
       },
-      inviterPhone: {
+      localPhone: {
         index: 2,
         label: "Phone number of local reference",
         component: TextInput,

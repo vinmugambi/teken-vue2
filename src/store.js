@@ -23,6 +23,10 @@ const actions = {
 
     Feathers.service("visa").remove(id);
   },
+  async update(context, payload) {
+    context.commit("input", payload);
+    await Feathers.service("visa").patch(context.state.current._id, payload).catch(error=>console.error(error));
+  },
 };
 
 const mutations = {
@@ -37,8 +41,8 @@ const mutations = {
   },
   input(state, payload) {
     if (!Object.keys(payload) || !Object.keys(payload).length === 0) {
-      console.error(
-        "patch payload should be an object that has more than one key"
+      throw new Error(
+        "patch payload should be an object that at least one key"
       );
     }
     let key = Object.keys(payload)[0];
@@ -68,11 +72,10 @@ const store = new Vuex.Store({
   },
   mutations: mutations,
   actions: actions,
-  getters: getters
+  getters: getters,
 });
 
 export default store;
-
 
 // convert the data returned from find into an object for easy get and update
 // function normalizeArray(data) {
@@ -95,4 +98,3 @@ export default store;
 //      initialStep.value=3;
 //    }}
 // })
-
