@@ -2,10 +2,14 @@
   <step-layout>
     <template v-slot:title>
       <div>
-        <h2>{{ questions.title }}</h2>
+        <h2 v-if="verify">Verify your information</h2>
+        <h2 v-else>{{ questions.title }}</h2>
       </div>
     </template>
-    <template v-slot:content>
+    <template v-if="verify" v-slot:full>
+      <verify v-on:jump="jumpTo($event)" />
+    </template>
+    <template v-else v-slot:content>
       <div>
         <form-factory
           :value="current"
@@ -17,7 +21,7 @@
     <template v-slot:navigation>
       <div class="flex justify-between flex-row-reverse">
         <my-button variant="primary" @click="nextStep">{{
-          isLastStep ? "Verify" : "Next"
+          verify ? "Submit" : isLastStep? "Verify": "Next"
         }}</my-button>
         <my-button @click="backStep">Previous</my-button>
       </div>
@@ -31,9 +35,10 @@ import StepLayout from "./StepLayout.vue";
 import { india } from "./fifth.js";
 import FormFactory from "../form/FormFactory.vue";
 import MyButton from "../navigation/Button.vue";
+import Verify from "./verify.vue";
 
 export default {
-  components: { StepLayout, FormFactory, MyButton },
+  components: { StepLayout, FormFactory, MyButton, Verify },
   setup(props, { root, emit }) {
     const Store = root.$store;
     const current = computed(() => Store.state.current);
@@ -50,6 +55,7 @@ export default {
 
     const questions = computed(() => india[currentStep.value]);
     const isLastStep = ref(false);
+    const verify = ref(false);
     const currentIndex = computed(() => india.steps.indexOf(currentStep.value));
 
     watchEffect(() => {
@@ -61,18 +67,27 @@ export default {
     });
 
     function nextStep() {
-      if (!isLastStep.value) {
-        currentStep.value = india.steps[currentIndex.value + 1];
-      }else {
+      if (verify.value) {
         emit("next");
+      } else if (!isLastStep.value) {
+        currentStep.value = india.steps[currentIndex.value + 1];
+      } else {
+        verify.value = true;
       }
     }
+
     function backStep() {
-      if (currentStep.value === india.steps[0]) {
+      if (verify.value) {
+        verify.value = false;
+      } else if (currentStep.value === india.steps[0]) {
         emit("back");
       } else {
         currentStep.value = india.steps[currentIndex.value - 1];
       }
+    }
+    function jumpTo(step) {
+      currentStep.value=step;
+      verify.value=false;
     }
     function update(field) {
       Store.dispatch("update", field);
@@ -84,7 +99,9 @@ export default {
       nextStep,
       backStep,
       currentStep,
-      isLastStep
+      isLastStep,
+      verify,
+      jumpTo
     };
   }
 };
