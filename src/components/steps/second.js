@@ -1,8 +1,5 @@
 import { allNationalities } from "../../utils/countries.js";
 
-import SelectBox from "../form/SelectBox.vue";
-import RadioInput from "../form/RadioInput.vue";
-
 const nations = allNationalities.map((nation) => {
   return { value: nation.value, text: nation.country };
 });
@@ -45,7 +42,7 @@ const passportTypes = [
 export const SCHEMA = {
   passport: {
     label: "Passport type",
-    component: RadioInput,
+    component: "radio",
     choices: passportTypes,
     validation: "required",
     help:
@@ -53,7 +50,7 @@ export const SCHEMA = {
   },
   nationality: {
     label: "Nationality",
-    component: SelectBox,
+    component: "select",
     choices: nations,
     attrs: { placeholder: "Select your nationality" },
     validation: "required",
@@ -61,21 +58,21 @@ export const SCHEMA = {
   },
   visaType: {
     label: "Visa type",
-    component: RadioInput,
+    component: "radio",
     choices: visaTypes,
     validation: "required",
     visible: false,
   },
   visaPurpose: {
     label: "Purpose of travel",
-    component: RadioInput,
+    component: "radio",
     choices: [],
     visible: false,
     validation: "required",
   },
   duration: {
     label: "Duration of visa",
-    component: RadioInput,
+    component: "radio",
     visible: false,
     validation: "required",
     options: [],

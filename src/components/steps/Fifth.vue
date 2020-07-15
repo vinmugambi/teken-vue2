@@ -3,7 +3,7 @@
     <template v-slot:title>
       <div>
         <h2 v-if="verify">Verify your information</h2>
-        <h2 v-else>{{ questions.title }}</h2>
+        <h2 v-else>{{ section.title }}</h2>
       </div>
     </template>
     <template v-if="verify" v-slot:full>
@@ -14,7 +14,7 @@
         <form-factory
           :value="current"
           @input="update($event)"
-          :schema="questions.questions"
+          :schema="section.questions"
         ></form-factory>
       </div>
     </template>
@@ -37,6 +37,10 @@ import FormFactory from "../form/FormFactory.vue";
 import MyButton from "../navigation/Button.vue";
 import Verify from "./verify.vue";
 
+const getSection=(sectionId)=>{
+  return india[sectionId];
+};
+
 export default {
   components: { StepLayout, FormFactory, MyButton, Verify },
   setup(props, { root, emit }) {
@@ -49,11 +53,11 @@ export default {
         } else return Store.state.current.currentStep;
       },
       set: value => {
-        Store.commit("input", { currentStep: value });
+        Store.dispatch("update", { currentStep: value });
       }
     });
 
-    const questions = computed(() => india[currentStep.value]);
+    const section = computed(() => getSection(currentStep.value));
     const isLastStep = ref(false);
     const verify = ref(false);
     const currentIndex = computed(() => india.steps.indexOf(currentStep.value));
@@ -69,9 +73,11 @@ export default {
     function nextStep() {
       if (verify.value) {
         emit("next");
+        Store.dispatch("update", { submitted: true });
       } else if (!isLastStep.value) {
         currentStep.value = india.steps[currentIndex.value + 1];
       } else {
+        Store.dispatch("update", { complete: true });
         verify.value = true;
       }
     }
@@ -92,16 +98,17 @@ export default {
     function update(field) {
       Store.dispatch("update", field);
     }
+
     return {
       current,
-      questions,
+      section,
       update,
       nextStep,
       backStep,
       currentStep,
       isLastStep,
       verify,
-      jumpTo
+      jumpTo,
     };
   }
 };

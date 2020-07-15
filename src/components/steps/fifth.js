@@ -1,9 +1,3 @@
-import SelectBox from "../form/SelectBox.vue";
-import RadioInput from "../form/RadioInput.vue";
-import TextInput from "../form/TextInput.vue";
-import FileInput from "../form/FileInput.vue";
-import { countries } from "./second";
-
 export const india = {
   steps: [9,8,7,6,1, 2, 3, 4, 5],
   1: {
@@ -16,19 +10,19 @@ export const india = {
       surname: {
         index: 0,
         label: "Surname / Family name",
-        component: TextInput,
+        component: "text",
         validation: "",
       },
       name: {
         index: 1,
         label: "Given name(s)",
-        component: TextInput,
+        component: "text",
         validation: "",
       },
       gender: {
         index: 2,
         label: "Gender/ sex",
-        component: SelectBox,
+        component: "select",
         attrs: { placeholder: "Select your gender" },
         choices: [
           { text: "Male", value: "male" },
@@ -40,7 +34,7 @@ export const india = {
         index: 3,
         label: "Education level",
         help: "Highest level of formal education you completed",
-        component: SelectBox,
+        component: "select",
         choices: [
           { text: "No education", value: "no" },
           { text: "Primary education", value: "one" },
@@ -59,20 +53,20 @@ export const india = {
       phone: {
         index: 0,
         label: "Phone / Mobile number",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       address: {
         index: 1,
         label: "Residential address",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       country: {
         index: 2,
         label: "Country of residence",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: { placeholder: "Select country where you currently live" },
         validation: "required",
       },
@@ -86,7 +80,7 @@ export const india = {
       marital: {
         index: 0,
         label: "Marital status",
-        component: RadioInput,
+        component: "radio",
         choices: [
           { text: "Single", value: "single" },
           { text: "Married", value: "married" },
@@ -96,29 +90,29 @@ export const india = {
       spouse: {
         index: 1,
         label: "Spouse name",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       spouseNationality: {
         index: 2,
         label: "Nationality of spouse",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: { placeholder: "Select the nationality of your spouse" },
         validation: "required",
       },
       spousePob: {
         index: 3,
         label: "Spouse's place of birth",
-        component: TextInput,
+        component: "text",
         attrs: { placeholder: "Where was your spouse born" },
         validation: "required",
       },
       spouseCob: {
         index: 4,
         label: "Spouse's nationality",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: {
           placeholder: "Select the country where your spouse was born",
         },
@@ -127,29 +121,29 @@ export const india = {
       father: {
         index: 5,
         label: "Father name",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       fatherNationality: {
         index: 6,
         label: "Nationality of father",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: { placeholder: "Select the nationality of your father" },
         validation: "required",
       },
       fatherPob: {
         index: 7,
         label: "Father's place of birth",
-        component: TextInput,
+        component: "text",
         attrs: { placeholder: "Where was your father born" },
         validation: "required",
       },
       fatherCob: {
         index: 8,
         label: "Fathers's nationality",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: {
           placeholder: "Select the country where your father was born",
         },
@@ -158,29 +152,29 @@ export const india = {
       mother: {
         index: 9,
         label: "Mother's name",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       motherNationality: {
         index: 10,
         label: "Nationality of mother",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: { placeholder: "Select the nationality of your mother" },
         validation: "required",
       },
       motherPob: {
         index: 11,
         label: "Mother's place of birth",
-        component: TextInput,
+        component: "text",
         attrs: { placeholder: "Where was your mother born" },
         validation: "required",
       },
       motherCob: {
         index: 12,
         label: "Mothers's nationality",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: {
           placeholder: "Select the country where your mother was born",
         },
@@ -196,28 +190,28 @@ export const india = {
       occupation: {
         index: 0,
         label: "Occupation",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       employer: {
         index: 1,
         label: "Employer name",
         help: "Name of the organization/person who has employed you",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       employerAddress: {
         index: 2,
         label: "Employer address",
         help: "Physical location of work place",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       employerCountry: {
         index: 3,
         label: "Country of employment",
-        component: SelectBox,
-        choices: countries,
+        component: "select",
+        choices: [],
         attrs: { placeholder: "Select country where you work" },
         validation: "required",
       },
@@ -232,19 +226,19 @@ export const india = {
         index: 0,
         //Generate label based on type of visa
         label: "Name of inviting person or organisation",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       inviterAddress: {
         index: 1,
         label: "Physical address of inviting person/organization",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       inviterPhone: {
         index: 2,
         label: "Phone number of inviter",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
     },
@@ -260,19 +254,19 @@ export const india = {
         label: "Local reference",
         //Automatically fill country of residence
         help: "Reference from the country which you a citizen",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       localReferenceAddress: {
         index: 1,
         label: "Physical address of local reference",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
       localPhone: {
         index: 2,
         label: "Phone number of local reference",
-        component: TextInput,
+        component: "text",
         validation: "required",
       },
     },
@@ -286,7 +280,7 @@ export const india = {
     questions: {
       passportImage: {
         index: 1,
-        component: FileInput,
+        component: "file",
         validation: "required",
       },
     },
@@ -300,7 +294,7 @@ export const india = {
     questions: {
       passportCopy: {
         index: 1,
-        component: FileInput,
+        component: "file",
         validation: "required"
       },
     },
@@ -314,7 +308,7 @@ export const india = {
     questions: {
       supportLetter: {
         index: 1,
-        component: FileInput,
+        component: "file",
         validation: "required"
       },
     },

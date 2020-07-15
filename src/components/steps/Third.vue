@@ -71,7 +71,6 @@ import StepLayout from "./StepLayout.vue";
 import MyButton from "../navigation/Button.vue";
 import FormFactory from "../form/FormFactory.vue";
 
-import TextInput from "../form/TextInput.vue";
 import License from "../form/License.vue";
 
 const keys = ["passport", "duration", "nationality", "visaPurpose", "visaType"];
@@ -140,7 +139,7 @@ export default {
 
 const SCHEMA = {
   email: {
-    component: TextInput,
+    component: "text",
     attrs: { placeholder: "jdoe@example.com", type: "email" },
     label: "Email address",
     validation: "required|email"

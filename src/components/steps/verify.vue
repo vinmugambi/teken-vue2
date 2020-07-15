@@ -20,7 +20,7 @@
           :key="question.name"
           class="py-2 px-4 flex"
         >
-          <p class="w-1/3 leading-none text-sm border-r border-blue-100 pr-1">
+          <p class="w-1/3 leading-none text-sm border-r-2 border-purple-100 pr-1">
             {{ question.label }}
           </p>
           <p class="w-2/3 flex items-center leading-none text-sm pl-2">

@@ -22,7 +22,7 @@
             {{ field.help }}
           </p>
           <component
-            :is="field.component"
+            :is="mapInput(field.component)"
             :error="true ? errors.length > 0 : false"
             v-bind="bindAttrs(field)"
             :id="safeId(field)"
@@ -39,22 +39,25 @@
 
 <script lang="js">
 import { computed, defineComponent} from "@vue/composition-api";
-import { ValidationProvider as Validate, extend } from 'vee-validate';
+import { ValidationProvider as Validate, extend } from "vee-validate";
 import { required, between,email } from "vee-validate/dist/rules";
 
-import inputLabel from "./InputLabel.vue";
 
-extend('required', {
+import inputLabel from "./InputLabel.vue";
+import {mapInput} from "../form/inputTypes.js";
+
+
+extend("required", {
   ...required,
-  message: '{_field_} is required'
+  message: "{_field_} is required"
 });
-extend('between', {
+extend("between", {
   ...between,
-  message: `{_field_} should be between {min} and {max}`
-})
-extend('email', {
+  message: "{_field_} should be between {min} and {max}"
+});
+extend("email", {
   ...email,
-  message: 'Input a valid email address'
+  message: "Input a valid email address"
 });
 
 export default defineComponent({
@@ -65,7 +68,7 @@ export default defineComponent({
   },
   components: { inputLabel, Validate},
   setup(props, { emit }) {
-   const fields = computed(() => {
+    const fields = computed(() => {
       let fields = [];
       for (let model in props.schema) {
         fields.push({ ...props.schema[model], model });
@@ -78,7 +81,7 @@ export default defineComponent({
     }
 
     function bindAttrs(field) {
-      return {...field.attrs, name: [field.model]}
+      return {...field.attrs, name: [field.model]};
     }
 
     function update(property, value) {
@@ -92,6 +95,7 @@ export default defineComponent({
       bindAttrs,
       update,
       safeId,
+      mapInput
     };
   }
 });

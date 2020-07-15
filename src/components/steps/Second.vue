@@ -60,9 +60,6 @@ import {
 import StepLayout from "./StepLayout.vue";
 import MyButton from "../navigation/Button.vue";
 import FormFactory from "../form/FormFactory.vue";
-// import ChoiceBox from "../form/ChoiceBox";
-// import TextInput from "../form/TextInput";
-// import RadioInput from "../form/RadioInput.vue";
 import NotQualify from "../alerts/NotQualify.vue";
 import useLocalStorage from "./useLocalStorage.js";
 
@@ -198,8 +195,6 @@ export default {
       isComplete,
       price,
       getLabel
-      // eligible,
-      // qualifies
     };
   }
 };
